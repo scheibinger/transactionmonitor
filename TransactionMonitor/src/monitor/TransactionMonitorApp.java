@@ -1,4 +1,6 @@
 /*
+ * Główna klasa zawierająca aplikację klienta
+ *
  * TransactionMonitorApp.java
  */
 
