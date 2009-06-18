@@ -206,6 +206,12 @@ public class TransactionMonitorView extends FrameView {
         criteriaKeyTextField.setText("");
         criteriaValueTextField.setText("");
     }
+    private void addOperation(){
+        String queryType = (String) this.operationTypeComboBox.getSelectedItem();
+        String tableName = this.operationTableTextField.getText();
+
+   //     QueryObject qo = new QueryObject();
+    }
     /**
      * 
      */
@@ -252,7 +258,7 @@ public class TransactionMonitorView extends FrameView {
         jButton2 = new javax.swing.JButton();
         addParemeterButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
-        jButton4 = new javax.swing.JButton();
+        addOperationButton = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         operationParametersTable = new javax.swing.JTable();
@@ -369,8 +375,13 @@ public class TransactionMonitorView extends FrameView {
 
         jSeparator2.setName("jSeparator2"); // NOI18N
 
-        jButton4.setText(resourceMap.getString("opearationAddButton.text")); // NOI18N
-        jButton4.setName("opearationAddButton"); // NOI18N
+        addOperationButton.setText(resourceMap.getString("opearationAddButton.text")); // NOI18N
+        addOperationButton.setName("opearationAddButton"); // NOI18N
+        addOperationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addOperationButtonActionPerformed(evt);
+            }
+        });
 
         jButton5.setText(resourceMap.getString("operationResetButton.text")); // NOI18N
         jButton5.setName("operationResetButton"); // NOI18N
@@ -472,7 +483,7 @@ public class TransactionMonitorView extends FrameView {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 447, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                        .addComponent(addOperationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                         .addGap(503, 503, 503)))
                 .addContainerGap())
             .addGroup(mainPanelLayout.createSequentialGroup()
@@ -579,7 +590,7 @@ public class TransactionMonitorView extends FrameView {
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addGap(143, 143, 143)
-                        .addComponent(jButton4))
+                        .addComponent(addOperationButton))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -715,9 +726,14 @@ public class TransactionMonitorView extends FrameView {
       }
     }//GEN-LAST:event_criterionsTableKeyPressed
 
+    private void addOperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addOperationButtonActionPerformed
+        this.addOperation();
+    }//GEN-LAST:event_addOperationButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCriteriaButton;
     private javax.swing.JButton addDbButton;
+    private javax.swing.JButton addOperationButton;
     private javax.swing.JButton addParemeterButton;
     private javax.swing.JTextField criteriaKeyTextField;
     private javax.swing.JComboBox criteriaOperatorCombo;
@@ -728,7 +744,6 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JComboBox dbTypeComboBox;
     private javax.swing.JTextField dbUserTextField;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
