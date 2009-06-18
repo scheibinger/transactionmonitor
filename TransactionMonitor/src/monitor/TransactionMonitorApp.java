@@ -42,5 +42,6 @@ public class TransactionMonitorApp extends SingleFrameApplication {
      */
     public static void main(String[] args) {
         launch(TransactionMonitorApp.class, args);
+        TransactionLogic.getInstance();
     }
 }
