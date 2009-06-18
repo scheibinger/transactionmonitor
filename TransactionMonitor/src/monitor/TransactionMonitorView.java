@@ -28,7 +28,7 @@ import monitor.queryobject.QueryObject;
  * The application's main frame.
  */
 public class TransactionMonitorView extends FrameView {
-    private List dbList = new ArrayList();
+    private Vector dbList = new Vector();
     private final String[] paramsTableHeader = {"Key","Value"};
     private final String[] criteriaTableHeader = {"Key","Operator","Value"};
     private final String[] operators = {Criteria.EQ, Criteria.GT, Criteria.LT, Criteria.LIKE};
@@ -36,18 +36,7 @@ public class TransactionMonitorView extends FrameView {
     public TransactionMonitorView(SingleFrameApplication app) {
         super(app);
         //bazy danych
-        Vector db1 = new Vector(4);
-        db1.add("MYSQL");
-        db1.add("jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_6");
-        db1.add("ares-system_6");
-        db1.add("TEsttest1");
-        dbList.add(db1);
-        Vector db2 = new Vector(4);
-        db2.add("MYSQL-XA");
-        db2.add("jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_7");
-        db2.add("ares-system_7");
-        db2.add("TEsttest1");
-        dbList.add(db2);
+        
 //        Vector db1 = new Vector(4);
 //        db3.add("MYSQL");
 //        db3.add(db1);
@@ -140,9 +129,10 @@ public class TransactionMonitorView extends FrameView {
     }
     private ComboBoxModel operationDbComboMOdel(){
             DefaultComboBoxModel model = new DefaultComboBoxModel();
+            dbList = TransactionLogic.getInstance().getDbConnectionList();
             for (int i=0; i<dbList.size(); i++){
-                Vector db = (Vector) dbList.get(i);
-                model.addElement(db.get(1));
+                DBConnectionData db = (DBConnectionData) dbList.get(i);
+                model.addElement(db.getDesc());
             }
             return model;
     }
@@ -161,7 +151,7 @@ public class TransactionMonitorView extends FrameView {
         return model;
     }
     /**
-     * Funkcja zapisuje dane połączenia do nowej bazy w pliku konfiguracyjnym
+     * Funkcja zapisuje dane poĹ‚Ä…czenia do nowej bazy w pliku konfiguracyjnym
      */
     public void addDb() {
         Vector db = new Vector(4);
@@ -178,7 +168,7 @@ public class TransactionMonitorView extends FrameView {
     }
 
     /**
-     * Funkcja tworzy nową transakcje globalna
+     * Funkcja tworzy nowÄ… transakcje globalna
      */
     public void resetGlobalTransaction(){
         TransactionLogic.getInstance().openTransaction();
@@ -219,7 +209,7 @@ public class TransactionMonitorView extends FrameView {
     }
 
     /**
-     * Funkcja odpalana z poziomu GUI. Uruchamia procedurę z klasy TransactionLogic
+     * Funkcja odpalana z poziomu GUI. Uruchamia procedurÄ™ z klasy TransactionLogic
      */
     public void startCompositeTransaction() {
     }

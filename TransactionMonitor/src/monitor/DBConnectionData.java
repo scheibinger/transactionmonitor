@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package monitor;
 
 /**
@@ -10,16 +9,29 @@ package monitor;
  * @author ASUS
  */
 public class DBConnectionData {
+
+    String desc;
+    String type;
     String driver;
     String url;
     String user;
     String password;
 
-     public DBConnectionData(String driver, String url, String user, String password) {
+    public DBConnectionData(String driver, String url, String user, String password, String desc, String type) {
         this.driver = driver;
         this.url = url;
         this.user = user;
         this.password = password;
+        this.desc = desc;
+        this.type = type;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public String getDriver() {
@@ -53,6 +65,4 @@ public class DBConnectionData {
     public void setUser(String user) {
         this.user = user;
     }
-
-
 }

@@ -47,26 +47,5 @@ public class TransactionMonitorApp extends SingleFrameApplication {
 
     }
 
-    public void loadDefaultDbConnections() {
-        // Baza1 MySQL 5
-        String driver1 = "com.mysql.jdbc.Driver";
-        String url1 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_6";
-        String user1 = "ares-system_6";
-        String password1 = "TEsttest1";
-        TransactionLogic.getInstance().addDbConnection(driver1, url1, user1, password1);
-
-        // Baza2 MySQL 5
-        String driver2 = "com.mysql.jdbc.Driver";
-        String url2 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_7";
-        String user2 = "ares-system_7";
-        String password2 = "TEsttest1";
-        TransactionLogic.getInstance().addDbConnection(driver2, url2, user2, password2);
-
-        // Baza3 PostgreSQL 8.3
-        String driver3 = "org.postgresql.Driver";
-        String url3 = "jdbc:postgresql://sql.ares-system.nazwa.pl:5433/ares-system_8";
-        String user3 = "ares-system_8";
-        String password3 = "TEsttest1";
-        TransactionLogic.getInstance().addDbConnection(driver3, url3, user3, password3);
-    }
+    
 }
