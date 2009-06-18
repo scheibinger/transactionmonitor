@@ -13,5 +13,13 @@ package monitor;
  * @author gofer
  */
 public class TransactionLogic {
+    private static TransactionLogic instance = null;
+    protected TransactionLogic(){};
 
+    public static TransactionLogic getInstance(){
+        if(instance == null){
+            instance = new TransactionLogic();
+        }
+        return instance;
+    }
 }
