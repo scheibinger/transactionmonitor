@@ -12,8 +12,12 @@ package monitor.queryobject;
 public class QueryParameter {
 
     private String field;
-    private Object value;
+    private String value;
 
+    public QueryParameter(String field, String value){
+        this.field = field;
+        this.value = value;
+    }
     public String getField() {
         return field;
     }
@@ -22,11 +26,11 @@ public class QueryParameter {
         this.field = field;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
         this.value = value;
     }
 

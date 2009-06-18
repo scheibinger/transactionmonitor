@@ -9,7 +9,6 @@ package monitor.queryobject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +17,9 @@ import java.util.List;
  *I * @author gofer
  */
 public class QueryObject {
-    private static final String INSERT = "INSERT";
-    private static final String DELETE = "DELETE";
-    private static final String UPDATE = "UPDATE";
+    public static final String INSERT = "INSERT";
+    public static final String DELETE = "DELETE";
+    public static final String UPDATE = "UPDATE";
 
     private List criteria = new ArrayList();
     private List parameters = new ArrayList();
@@ -66,21 +65,25 @@ public class QueryObject {
         }
         return q;
     }
-    private String generateQueryByCriteria(){
+    public String generateQuery() throws Exception{
        String query = "";
         if (queryType.equals(QueryObject.INSERT)){
            String query1 = "INSERT INTO "+tableName+" (";
            String query2 = " VALUES (";
-           for (int i=0; i<parameters.size(); i++){
-               QueryParameter param = (QueryParameter) parameters.get(i);
+           if (parameters != null){
+               for (int i=0; i<parameters.size(); i++){
+                   QueryParameter param = (QueryParameter) parameters.get(i);
                    query1+=param.getField()+",";
                    query2+=param.getValue()+",";
+               }
+               query1 = query1.substring(0, query1.length()-2);
+               query2 = query2.substring(0, query2.length()-2);
+               query1 += ")";
+               query2 += ")";
+               query += query1+query2;
+           } else {
+               throw new Exception("Nie podano parametrow dla zapytania");
            }
-           query1.substring(0, query1.length()-2);
-           query2.substring(0, query2.length()-2);
-           query1 += ")";
-           query2 += ")";
-           query += query1+query2;
        } else if (queryType.equals(QueryObject.DELETE)){
             query += "DELETE FROM "+tableName;
        } else if (queryType.equals(QueryObject.UPDATE)){
@@ -91,7 +94,7 @@ public class QueryObject {
            }
            query.substring(0, query.length()-2);
        }
-        if (!criteria.isEmpty()){
+        if (criteria != null && !criteria.isEmpty()){
             query += " WHERE ";
             for (int i=0; i<this.criteria.size(); i++){
                 Criteria cr = (Criteria) criteria.get(i);

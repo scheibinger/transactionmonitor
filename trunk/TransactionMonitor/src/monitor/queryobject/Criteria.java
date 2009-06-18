@@ -10,19 +10,19 @@ package monitor.queryobject;
  * @author Kubutek
  */
 public class Criteria {
-    private static final String GT = " > ";
-    private static final String LT = " < ";
-    private static final String EQ = " = ";
-    private static final String LIKE = " LIKE ";
-    private static final String AND = " AND ";
-    private static final String OR = " OR ";
+    public static final String GT = " > ";
+    public static final String LT = " < ";
+    public static final String EQ = " = ";
+    public static final String LIKE = " LIKE ";
+    public static final String AND = " AND ";
+    public static final String OR = " OR ";
     private String sqlOperator = null;
     private String field = null;
-    private Object value=null;
+    private String value=null;
     private Criteria left = null;
     private Criteria right = null;
 
-    public Criteria(String operator, String field, Object value){
+    public Criteria(String operator, String field, String value){
         this.sqlOperator = operator;
         this.field = field;
         this.value = value;
@@ -33,7 +33,7 @@ public class Criteria {
         this.right = right;
     }
 
-    public static Criteria equals(String field, Object value){
+    public static Criteria equals(String field, String value){
         return new Criteria(Criteria.EQ, field, value);
     }
     public static Criteria like(String field, String value){
@@ -42,11 +42,11 @@ public class Criteria {
     public static Criteria ilike(String field, String value){
         return null;//Criteria.like();
     }
-    public static Criteria lowerThen(String field, Object value){
+    public static Criteria lowerThen(String field, String value){
         return new Criteria(Criteria.LT, field, value);
     }
 
-    public static Criteria greaterThen(String field, Object value){
+    public static Criteria greaterThen(String field, String value){
         return new Criteria(Criteria.GT,field,value);
     }
     public static Criteria and(Criteria c1, Criteria c2){
@@ -64,11 +64,11 @@ public class Criteria {
         this.field = field;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
