@@ -10,6 +10,7 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -378,6 +379,11 @@ public class TransactionMonitorView extends FrameView {
 
         operationParametersTable.setModel(operationParametersModel);
         operationParametersTable.setName("operationParametersTable"); // NOI18N
+        operationParametersTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                operationParametersTableKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(operationParametersTable);
 
         operationTableTextField.setText(resourceMap.getString("operationTableTextField.text")); // NOI18N
@@ -391,18 +397,13 @@ public class TransactionMonitorView extends FrameView {
 
         jScrollPane2.setName("jScrollPane2"); // NOI18N
 
-        criterionsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
-
-            }
-        ));
+        criterionsTable.setModel(criteriaTableModel);
         criterionsTable.setName("criterionsTable"); // NOI18N
+        criterionsTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                criterionsTableKeyPressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(criterionsTable);
 
         jLabel14.setText(resourceMap.getString("jLabel14.text")); // NOI18N
@@ -701,6 +702,18 @@ public class TransactionMonitorView extends FrameView {
     private void addCriteriaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCriteriaButtonActionPerformed
         this.addCriteira();
     }//GEN-LAST:event_addCriteriaButtonActionPerformed
+
+    private void operationParametersTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_operationParametersTableKeyPressed
+      if (evt.getKeyCode() == KeyEvent.VK_DELETE){
+        this.operationParametersModel.removeRow(this.operationParametersTable.getSelectedRow());
+      }
+    }//GEN-LAST:event_operationParametersTableKeyPressed
+
+    private void criterionsTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_criterionsTableKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE){
+        this.criteriaTableModel.removeRow(this.criterionsTable.getSelectedRow());
+      }
+    }//GEN-LAST:event_criterionsTableKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCriteriaButton;
