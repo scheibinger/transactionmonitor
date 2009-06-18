@@ -29,15 +29,17 @@ import monitor.queryobject.QueryParameter;
  * The application's main frame.
  */
 public class TransactionMonitorView extends FrameView {
+
     private Vector dbList = new Vector();
-    private final String[] paramsTableHeader = {"Key","Value"};
-    private final String[] criteriaTableHeader = {"Key","Operator","Value"};
+    private final String[] paramsTableHeader = {"Key", "Value"};
+    private final String[] criteriaTableHeader = {"Key", "Operator", "Value"};
     private final String[] operators = {Criteria.EQ, Criteria.GT, Criteria.LT, Criteria.LIKE};
     private final String[] operations = {QueryObject.INSERT, QueryObject.DELETE, QueryObject.UPDATE};
+
     public TransactionMonitorView(SingleFrameApplication app) {
         super(app);
         //bazy danych
-        
+
 //        Vector db1 = new Vector(4);
 //        db3.add("MYSQL");
 //        db3.add(db1);
@@ -48,15 +50,15 @@ public class TransactionMonitorView extends FrameView {
         TransactionLogic.getInstance().openTransaction();
         operationParametersModel = new DefaultTableModel();
 
-        for (int i=0; i<paramsTableHeader.length;i++){
+        for (int i = 0; i < paramsTableHeader.length; i++) {
             operationParametersModel.addColumn(paramsTableHeader[i]);
         }
 
         criteriaTableModel = new DefaultTableModel();
-        for (int i=0; i<criteriaTableHeader.length; i++){
+        for (int i = 0; i < criteriaTableHeader.length; i++) {
             criteriaTableModel.addColumn(criteriaTableHeader[i]);
         }
-        
+
         initComponents();
 
 
@@ -128,42 +130,61 @@ public class TransactionMonitorView extends FrameView {
         }
         TransactionMonitorApp.getApplication().show(aboutBox);
     }
-    private ComboBoxModel operationDbComboMOdel(){
-            DefaultComboBoxModel model = new DefaultComboBoxModel();
-            dbList = TransactionLogic.getInstance().getDbConnectionList();
-            for (int i=0; i<dbList.size(); i++){
-                DBConnectionData db = (DBConnectionData) dbList.get(i);
-                model.addElement(db.getDesc());
-            }
-            return model;
-    }
-    private ComboBoxModel operatorsComboModel(){
-            DefaultComboBoxModel model = new DefaultComboBoxModel();
-            for (int i=0; i<operators.length; i++){
-                model.addElement(operators[i]);
-            }
-            return model;
-    }
-    private ComboBoxModel operationsComboModel(){
+
+    private ComboBoxModel operationDbComboMOdel() {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        for (int i=0; i<operations.length; i++){
-                model.addElement(operations[i]);
-            }
+        dbList = TransactionLogic.getInstance().getDbConnectionList();
+        for (int i = 0; i < dbList.size(); i++) {
+            DBConnectionData db = (DBConnectionData) dbList.get(i);
+            model.addElement(db.getDesc());
+        }
         return model;
     }
+
+    private ComboBoxModel operatorsComboModel() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        for (int i = 0; i < operators.length; i++) {
+            model.addElement(operators[i]);
+        }
+        return model;
+    }
+
+    private ComboBoxModel operationsComboModel() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        for (int i = 0; i < operations.length; i++) {
+            model.addElement(operations[i]);
+        }
+        return model;
+    }
+
     /**
      * Funkcja zapisuje dane poĹ‚Ä…czenia do nowej bazy w pliku konfiguracyjnym
      */
     public void addDb() {
-        Vector db = new Vector(4);
-        db.add(this.dbTypeComboBox.getSelectedItem());
-        db.add(this.dbConnectionUrlTextField.getText());
-        db.add(this.dbUserTextField.getText());
-        db.add(this.dbPasswordField.getPassword());
+        String driver = "";
+        String url="";
+        String dbType = this.dbTypeComboBox.getSelectedItem().toString();
+
+        if (dbType.equals("mysql")) {
+            driver = "com.mysql.jdbc.Driver";
+            url = "jdbc:mysql://"+this.dbHostTextField.getText()+":"+this.dbPortTextField.getText()+"/"+this.dbNameTextField.getText();
+        } else if (dbType.equals("postgresql")) {
+            driver = "org.postgresql.Driver";
+            url = "jdbc:postgresql://"+this.dbHostTextField.getText()+":"+this.dbPortTextField.getText()+"/"+this.dbNameTextField.getText();
+        }
+
+        String user = this.dbUserTextField.getText();
+        String password = this.dbPasswordField.getPassword().toString();
+        String desc = this.dbDescriptionTextField.getText()+" "+this.dbProtocolComboBox.getSelectedItem().toString();
+
+
+        String type = this.dbProtocolComboBox.getSelectedItem().toString();
+        DBConnectionData db = new DBConnectionData(driver, url, user, password, desc, type);
+
         dbList.add(db);
         this.operationDbComboBox.setModel(operationDbComboMOdel());
-        this.operationDbComboBox.setSelectedIndex(dbList.size()-1);
-        dbConnectionUrlTextField.setText("");
+        this.operationDbComboBox.setSelectedIndex(dbList.size() - 1);
+        dbHostTextField.setText("");
         dbUserTextField.setText("");
         dbPasswordField.setText("");
     }
@@ -171,7 +192,7 @@ public class TransactionMonitorView extends FrameView {
     /**
      * Funkcja tworzy nowÄ… transakcje globalna
      */
-    public void resetGlobalTransaction(){
+    public void resetGlobalTransaction() {
         TransactionLogic.getInstance().openTransaction();
 
     }
@@ -188,6 +209,7 @@ public class TransactionMonitorView extends FrameView {
         operationKeyTextField.setText("");
         operationValueTextField.setText("");
     }
+
     public void addCriteira() {
         Vector tmpRow = new Vector(3);
         tmpRow.add(this.criteriaKeyTextField.getText());
@@ -197,7 +219,8 @@ public class TransactionMonitorView extends FrameView {
         criteriaKeyTextField.setText("");
         criteriaValueTextField.setText("");
     }
-    private void addOperation(){
+
+    private void addOperation() {
         String queryType = (String) this.operationTypeComboBox.getSelectedItem();
         String tableName = this.operationTableTextField.getText();
         List criterions = new ArrayList();
@@ -219,6 +242,7 @@ public class TransactionMonitorView extends FrameView {
         System.out.println(qo.generateQuery());
         } catch (Exception e) {}
     }
+
     /**
      * 
      */
@@ -250,7 +274,7 @@ public class TransactionMonitorView extends FrameView {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        dbConnectionUrlTextField = new javax.swing.JTextField();
+        dbHostTextField = new javax.swing.JTextField();
         dbUserTextField = new javax.swing.JTextField();
         dbPasswordField = new javax.swing.JPasswordField();
         addDbButton = new javax.swing.JButton();
@@ -284,6 +308,14 @@ public class TransactionMonitorView extends FrameView {
         jLabel16 = new javax.swing.JLabel();
         criteriaValueTextField = new javax.swing.JTextField();
         addCriteriaButton = new javax.swing.JButton();
+        dbProtocolComboBox = new javax.swing.JComboBox();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        dbPortTextField = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        dbDescriptionTextField = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        dbNameTextField = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -299,7 +331,7 @@ public class TransactionMonitorView extends FrameView {
 
         jSeparator1.setName("jSeparator1"); // NOI18N
 
-        dbTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "MYSQL", "MYSQL XA" }));
+        dbTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "mysql", "postgresql" }));
         dbTypeComboBox.setName("dbTypeComboBox"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(monitor.TransactionMonitorApp.class).getContext().getResourceMap(TransactionMonitorView.class);
@@ -315,8 +347,8 @@ public class TransactionMonitorView extends FrameView {
         jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
         jLabel4.setName("jLabel4"); // NOI18N
 
-        dbConnectionUrlTextField.setText(resourceMap.getString("dbConnectionUrlTextField.text")); // NOI18N
-        dbConnectionUrlTextField.setName("dbConnectionUrlTextField"); // NOI18N
+        dbHostTextField.setText(resourceMap.getString("dbHostTextField.text")); // NOI18N
+        dbHostTextField.setName("dbHostTextField"); // NOI18N
 
         dbUserTextField.setText(resourceMap.getString("dbUserTextField.text")); // NOI18N
         dbUserTextField.setName("dbUserTextField"); // NOI18N
@@ -458,6 +490,27 @@ public class TransactionMonitorView extends FrameView {
             }
         });
 
+        dbProtocolComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2PC AGH", "XA" }));
+        dbProtocolComboBox.setName("dbProtocolComboBox"); // NOI18N
+
+        jLabel17.setText(resourceMap.getString("jLabel17.text")); // NOI18N
+        jLabel17.setName("jLabel17"); // NOI18N
+
+        jLabel18.setText(resourceMap.getString("jLabel18.text")); // NOI18N
+        jLabel18.setName("jLabel18"); // NOI18N
+
+        dbPortTextField.setName("dbPortTextField"); // NOI18N
+
+        jLabel19.setText(resourceMap.getString("jLabel19.text")); // NOI18N
+        jLabel19.setName("jLabel19"); // NOI18N
+
+        dbDescriptionTextField.setName("dbDescriptionTextField"); // NOI18N
+
+        jLabel20.setText(resourceMap.getString("jLabel20.text")); // NOI18N
+        jLabel20.setName("jLabel20"); // NOI18N
+
+        dbNameTextField.setName("dbNameTextField"); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -465,30 +518,53 @@ public class TransactionMonitorView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
+                        .addContainerGap()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
                             .addGroup(mainPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel5)
-                                .addGap(104, 104, 104)
-                                .addComponent(jLabel1))
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
+                                .addGap(18, 18, 18)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addGroup(mainPanelLayout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jLabel1))
+                                    .addComponent(jLabel3)))
+                            .addComponent(jLabel19)
+                            .addComponent(jLabel20))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(dbPasswordField)
-                            .addComponent(dbUserTextField)
-                            .addComponent(dbTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dbConnectionUrlTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addDbButton))
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(dbUserTextField)
+                                    .addComponent(dbHostTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                                    .addComponent(dbTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(dbNameTextField))
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(mainPanelLayout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(addDbButton)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(jLabel18)
+                                                    .addComponent(jLabel17))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(dbPortTextField)
+                                                    .addComponent(dbPasswordField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(dbProtocolComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addGroup(mainPanelLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel4))))
+                            .addComponent(dbDescriptionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(mainPanelLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(jLabel6))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE))))
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE))))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
@@ -498,7 +574,7 @@ public class TransactionMonitorView extends FrameView {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 447, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(addOperationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                        .addComponent(addOperationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                         .addGap(503, 503, 503)))
                 .addContainerGap())
             .addGroup(mainPanelLayout.createSequentialGroup()
@@ -521,7 +597,7 @@ public class TransactionMonitorView extends FrameView {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(criteriaValueTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                        .addComponent(criteriaValueTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(addCriteriaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(70, 70, 70))
@@ -537,14 +613,14 @@ public class TransactionMonitorView extends FrameView {
                         .addContainerGap())
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
                             .addComponent(operationTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(resetOperationButton))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                                .addComponent(operationDbComboBox, 0, 280, Short.MAX_VALUE)
+                                .addComponent(operationDbComboBox, 0, 364, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel12)
                                 .addGap(18, 18, 18)
@@ -555,24 +631,42 @@ public class TransactionMonitorView extends FrameView {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dbTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel5))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(dbTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel17))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(dbHostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel18))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(dbUserTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(dbNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel20)))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(dbProtocolComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dbPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(dbPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(dbConnectionUrlTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(dbUserTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(dbPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addDbButton))
+                    .addComponent(dbDescriptionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19))
                 .addGap(18, 18, 18)
+                .addComponent(addDbButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -660,11 +754,11 @@ public class TransactionMonitorView extends FrameView {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 485, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 569, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -695,34 +789,35 @@ public class TransactionMonitorView extends FrameView {
 }//GEN-LAST:event_addParemeterButtonActionPerformed
 
     private void addDbButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDbButtonActionPerformed
-       this.addDb();
+        this.addDb();
     }//GEN-LAST:event_addDbButtonActionPerformed
 
-    private void setCriterionsEnabled(boolean enabled){
+    private void setCriterionsEnabled(boolean enabled) {
         criterionsTable.setEnabled(enabled);
         criteriaKeyTextField.setEnabled(enabled);
         criteriaOperatorCombo.setEnabled(enabled);
         criteriaValueTextField.setEnabled(enabled);
         addCriteriaButton.setEnabled(enabled);
     }
-    private void setParametersEnabled(boolean enabled){
+
+    private void setParametersEnabled(boolean enabled) {
         operationParametersTable.setEnabled(enabled);
         operationKeyTextField.setEnabled(enabled);
         operationValueTextField.setEnabled(enabled);
         addParemeterButton.setEnabled(enabled);
     }
     private void operationTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operationTypeComboBoxActionPerformed
-      String operationType = (String)this.operationTypeComboBox.getSelectedItem();
-      if (operationType.equals(QueryObject.INSERT)){
+        String operationType = (String) this.operationTypeComboBox.getSelectedItem();
+        if (operationType.equals(QueryObject.INSERT)) {
             setParametersEnabled(true);
             setCriterionsEnabled(false);
-      } else if (operationType.equals(QueryObject.DELETE)){
-              setParametersEnabled(false);
-              setCriterionsEnabled(true);
-      } else if (operationType.equals(QueryObject.UPDATE)) {
+        } else if (operationType.equals(QueryObject.DELETE)) {
+            setParametersEnabled(false);
+            setCriterionsEnabled(true);
+        } else if (operationType.equals(QueryObject.UPDATE)) {
             setParametersEnabled(true);
             setCriterionsEnabled(true);
-      }
+        }
     }//GEN-LAST:event_operationTypeComboBoxActionPerformed
 
     private void addCriteriaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCriteriaButtonActionPerformed
@@ -730,15 +825,15 @@ public class TransactionMonitorView extends FrameView {
     }//GEN-LAST:event_addCriteriaButtonActionPerformed
 
     private void operationParametersTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_operationParametersTableKeyPressed
-      if (evt.getKeyCode() == KeyEvent.VK_DELETE){
-        this.operationParametersModel.removeRow(this.operationParametersTable.getSelectedRow());
-      }
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            this.operationParametersModel.removeRow(this.operationParametersTable.getSelectedRow());
+        }
     }//GEN-LAST:event_operationParametersTableKeyPressed
 
     private void criterionsTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_criterionsTableKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_DELETE){
-        this.criteriaTableModel.removeRow(this.criterionsTable.getSelectedRow());
-      }
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            this.criteriaTableModel.removeRow(this.criterionsTable.getSelectedRow());
+        }
     }//GEN-LAST:event_criterionsTableKeyPressed
 
     private void addOperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addOperationButtonActionPerformed
@@ -758,8 +853,12 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JComboBox criteriaOperatorCombo;
     private javax.swing.JTextField criteriaValueTextField;
     private javax.swing.JTable criterionsTable;
-    private javax.swing.JTextField dbConnectionUrlTextField;
+    private javax.swing.JTextField dbDescriptionTextField;
+    private javax.swing.JTextField dbHostTextField;
+    private javax.swing.JTextField dbNameTextField;
     private javax.swing.JPasswordField dbPasswordField;
+    private javax.swing.JTextField dbPortTextField;
+    private javax.swing.JComboBox dbProtocolComboBox;
     private javax.swing.JComboBox dbTypeComboBox;
     private javax.swing.JTextField dbUserTextField;
     private javax.swing.JButton jButton2;
@@ -771,7 +870,11 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -802,10 +905,7 @@ public class TransactionMonitorView extends FrameView {
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
-
     private DefaultTableModel criteriaTableModel;
     private DefaultTableModel operationParametersModel;
     private JDialog aboutBox;
-
-
 }
