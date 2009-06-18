@@ -1,9 +1,9 @@
 /*
  * TransactionMonitorView.java
  */
-
 package monitor;
 
+import javax.swing.event.TableModelListener;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -11,10 +11,12 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.table.AbstractTableModel;
 
 /**
  * The application's main frame.
@@ -24,12 +26,16 @@ public class TransactionMonitorView extends FrameView {
     public TransactionMonitorView(SingleFrameApplication app) {
         super(app);
 
+
+        operationParametersModel = new OperationParametersModel();
         initComponents();
+
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 statusMessageLabel.setText("");
             }
@@ -40,6 +46,7 @@ public class TransactionMonitorView extends FrameView {
             busyIcons[i] = resourceMap.getIcon("StatusBar.busyIcons[" + i + "]");
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
                 statusAnimationLabel.setIcon(busyIcons[busyIconIndex]);
@@ -52,6 +59,7 @@ public class TransactionMonitorView extends FrameView {
         // connecting action tasks to status bar via TaskMonitor
         TaskMonitor taskMonitor = new TaskMonitor(getApplication().getContext());
         taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 String propertyName = evt.getPropertyName();
                 if ("started".equals(propertyName)) {
@@ -68,11 +76,11 @@ public class TransactionMonitorView extends FrameView {
                     progressBar.setVisible(false);
                     progressBar.setValue(0);
                 } else if ("message".equals(propertyName)) {
-                    String text = (String)(evt.getNewValue());
+                    String text = (String) (evt.getNewValue());
                     statusMessageLabel.setText((text == null) ? "" : text);
                     messageTimer.restart();
                 } else if ("progress".equals(propertyName)) {
-                    int value = (Integer)(evt.getNewValue());
+                    int value = (Integer) (evt.getNewValue());
                     progressBar.setVisible(true);
                     progressBar.setIndeterminate(false);
                     progressBar.setValue(value);
@@ -94,38 +102,31 @@ public class TransactionMonitorView extends FrameView {
     /**
      * Funkcja zapisuje dane połączenia do nowej bazy w pliku konfiguracyjnym
      */
-    public void addDb(){
-
+    public void addDb() {
     }
 
     /**
      * 
      */
-    public void addOperation(){
+    public void addOperation() {
         //dodajemy wiersz do tabeli
-        try{
-            operationParametersTable.addRowSelectionInterval(0,1);
-        }catch(Exception e){
-            throw new IllegalArgumentException(e);
-        }
-
-
-
+        Vector tmpRow = new Vector(2);
+        tmpRow.add(this.operationKeyTextField);
+        tmpRow.add(this.operationValueTextField);
+        //.addRow(tmpRow);
 
     }
 
     /**
      * 
      */
-    public void resetOperations(){
-
+    public void resetOperations() {
     }
 
     /**
      * Funkcja odpalana z poziomu GUI. Uruchamia procedurę z klasy TransactionLogic
      */
-    public void startCompositeTransaction(){
-
+    public void startCompositeTransaction() {
     }
 
     /** This method is called from within the constructor to
@@ -267,6 +268,7 @@ public class TransactionMonitorView extends FrameView {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
+        operationParametersTable.setModel(operationParametersModel);
         operationParametersTable.setName("operationParametersTable"); // NOI18N
         jScrollPane1.setViewportView(operationParametersTable);
 
@@ -316,10 +318,9 @@ public class TransactionMonitorView extends FrameView {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(84, 84, 84)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(74, 74, 74)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel7)
                             .addComponent(jLabel8)
@@ -521,12 +522,49 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
     // End of variables declaration//GEN-END:variables
-
     private final Timer messageTimer;
     private final Timer busyIconTimer;
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
 
+    class OperationParametersModel extends AbstractTableModel {
+
+        private String[] columnNames = {"First Name",
+            "Last Name",
+            "Sport",
+            "# of Years",
+            "Vegetarian"};
+        private Object[][] data = {
+            {"Mary", "Campione",
+                "Snowboarding", new Integer(5), new Boolean(false)},
+            {"Alison", "Huml",
+                "Rowing", new Integer(3), new Boolean(true)},
+            {"Kathy", "Walrath",
+                "Knitting", new Integer(2), new Boolean(false)},
+            {"Sharon", "Zakhour",
+                "Speed reading", new Integer(20), new Boolean(true)},
+            {"Philip", "Milne",
+                "Pool", new Integer(10), new Boolean(false)}
+        };
+
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public int getRowCount() {
+            return data.length;
+        }
+
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+
+        public Object getValueAt(int row, int col) {
+            return data[row][col];
+        }
+    };
+
+    private OperationParametersModel operationParametersModel;
     private JDialog aboutBox;
 }
