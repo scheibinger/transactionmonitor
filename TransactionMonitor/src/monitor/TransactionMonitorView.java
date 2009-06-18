@@ -54,7 +54,7 @@ public class TransactionMonitorView extends FrameView {
 //        db3.add(db1);
         //bazy danych - koniec
 
-
+        TransactionLogic.getInstance().openTransaction();
         operationParametersModel = new DefaultTableModel();
 
         for (int i=0; i<paramsTableHeader.length;i++){
@@ -174,6 +174,14 @@ public class TransactionMonitorView extends FrameView {
         dbConnectionUrlTextField.setText("");
         dbUserTextField.setText("");
         dbPasswordField.setText("");
+    }
+
+    /**
+     * Funkcja tworzy nową transakcje globalna
+     */
+    public void resetGlobalTransaction(){
+        TransactionLogic.getInstance().openTransaction();
+
     }
 
     /**

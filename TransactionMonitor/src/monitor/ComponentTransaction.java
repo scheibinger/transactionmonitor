@@ -5,10 +5,13 @@
 
 package monitor;
 
+import java.util.Vector;
+
 /**
  *
  * @author gofer
  */
-public class ComponentTransaction {
+public class ComponentTransaction extends Vector<Operation>{
+
 
 }
