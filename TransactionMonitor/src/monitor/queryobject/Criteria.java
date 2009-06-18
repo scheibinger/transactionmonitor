@@ -22,12 +22,12 @@ public class Criteria {
     private Criteria left = null;
     private Criteria right = null;
 
-    public Criteria(String operator, String field, String value){
+    public Criteria(String field, String operator, String value){
         this.sqlOperator = operator;
         this.field = field;
         this.value = value;
     }
-    public Criteria (String sqlOperator, Criteria left, Criteria right){
+    public Criteria (Criteria left, String sqlOperator,  Criteria right){
         this.sqlOperator = sqlOperator;
         this.left = left;
         this.right = right;
@@ -50,10 +50,10 @@ public class Criteria {
         return new Criteria(Criteria.GT,field,value);
     }
     public static Criteria and(Criteria c1, Criteria c2){
-        return new Criteria (Criteria.AND, c1, c2);
+        return new Criteria (c1,Criteria.AND,  c2);
     }
     public static Criteria or(Criteria c1, Criteria c2){
-        return new Criteria (Criteria.OR, c1, c2);
+        return new Criteria ( c1,Criteria.OR, c2);
     }
     //GETTERS & SETTERS
     public String getField() {

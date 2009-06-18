@@ -92,13 +92,16 @@ public class QueryObject {
                QueryParameter param = (QueryParameter) parameters.get(i);
                query+=param.getField()+"="+param.getValue()+",";
            }
-           query.substring(0, query.length()-2);
+           query = query.substring(0, query.length()-2);
        }
         if (criteria != null && !criteria.isEmpty()){
             query += " WHERE ";
             for (int i=0; i<this.criteria.size(); i++){
                 Criteria cr = (Criteria) criteria.get(i);
                 query += getQueryFromCriteria(cr);
+                if (i!=criteria.size()-1){
+                query += Criteria.AND;
+                }
             }
         }  
         return query;
