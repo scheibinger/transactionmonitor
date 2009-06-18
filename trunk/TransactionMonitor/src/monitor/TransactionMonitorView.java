@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import monitor.queryobject.Criteria;
 import monitor.queryobject.QueryObject;
+import monitor.queryobject.QueryParameter;
 
 /**
  * The application's main frame.
@@ -199,13 +200,32 @@ public class TransactionMonitorView extends FrameView {
     private void addOperation(){
         String queryType = (String) this.operationTypeComboBox.getSelectedItem();
         String tableName = this.operationTableTextField.getText();
-
-   //     QueryObject qo = new QueryObject();
+        List criterions = new ArrayList();
+        for (int i=0; i<criteriaTableModel.getRowCount();i++){
+         Criteria cr = new Criteria((String)criteriaTableModel.getValueAt(i, 0),
+                                  (String)criteriaTableModel.getValueAt(i, 1),
+                                  (String)criteriaTableModel.getValueAt(i, 2));
+         criterions.add(cr);
+        }
+        List params = new ArrayList();
+        for (int i=0; i<operationParametersModel.getRowCount(); i++){
+            QueryParameter qp = new QueryParameter(
+                                  (String)operationParametersModel.getValueAt(i, 0),
+                                  (String)operationParametersModel.getValueAt(i, 1));
+            params.add(qp);
+        }
+            QueryObject qo = new QueryObject(queryType, tableName, criterions,params);
+        try {
+        System.out.println(qo.generateQuery());
+        } catch (Exception e) {}
     }
     /**
      * 
      */
     public void resetOperations() {
+        operationParametersTable.removeAll();
+        criterionsTable.removeAll();
+
     }
 
     /**
@@ -249,7 +269,7 @@ public class TransactionMonitorView extends FrameView {
         addParemeterButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         addOperationButton = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        resetOperationButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         operationParametersTable = new javax.swing.JTable();
         operationTableTextField = new javax.swing.JTextField();
@@ -373,8 +393,13 @@ public class TransactionMonitorView extends FrameView {
             }
         });
 
-        jButton5.setText(resourceMap.getString("operationResetButton.text")); // NOI18N
-        jButton5.setName("operationResetButton"); // NOI18N
+        resetOperationButton.setText(resourceMap.getString("operationResetButton.text")); // NOI18N
+        resetOperationButton.setName("operationResetButton"); // NOI18N
+        resetOperationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetOperationButtonActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -517,7 +542,7 @@ public class TransactionMonitorView extends FrameView {
                             .addComponent(operationTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton5))
+                                .addComponent(resetOperationButton))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                 .addComponent(operationDbComboBox, 0, 280, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -563,7 +588,7 @@ public class TransactionMonitorView extends FrameView {
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(operationTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8)))
-                    .addComponent(jButton5))
+                    .addComponent(resetOperationButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
@@ -720,6 +745,10 @@ public class TransactionMonitorView extends FrameView {
         this.addOperation();
     }//GEN-LAST:event_addOperationButtonActionPerformed
 
+    private void resetOperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetOperationButtonActionPerformed
+      this.resetOperations();
+    }//GEN-LAST:event_resetOperationButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCriteriaButton;
     private javax.swing.JButton addDbButton;
@@ -734,7 +763,6 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JComboBox dbTypeComboBox;
     private javax.swing.JTextField dbUserTextField;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -764,6 +792,7 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JComboBox operationTypeComboBox;
     private javax.swing.JTextField operationValueTextField;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JButton resetOperationButton;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
