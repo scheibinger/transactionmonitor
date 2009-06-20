@@ -247,11 +247,15 @@ public class TransactionMonitorView extends FrameView {
      * 
      */
     public void resetOperations() {
-        operationParametersTable.removeAll();
-        criterionsTable.removeAll();
+       this.clearTable(criteriaTableModel);
+       this.clearTable(operationParametersModel);
 
     }
-
+    private void clearTable(DefaultTableModel model){
+        for (int i=0; i<model.getRowCount(); i++){
+            model.removeRow(i);
+        }
+    }
     /**
      * Funkcja odpalana z poziomu GUI. Uruchamia procedurÄ™ z klasy TransactionLogic
      */
