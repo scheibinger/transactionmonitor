@@ -11,28 +11,40 @@ package monitor;
 public class DBConnectionData {
 
     String desc;
-    String type;
     String driver;
     String url;
     String user;
     String password;
+    String dbType;
+    String protocolType;
 
-    public DBConnectionData(String driver, String url, String user, String password, String desc, String type) {
+    public DBConnectionData( String driver, String url, String user, String password, String desc, String dbType, String protocolType) {
+        this.desc = desc;
         this.driver = driver;
         this.url = url;
         this.user = user;
         this.password = password;
-        this.desc = desc;
-        this.type = type;
+        this.dbType = dbType;
+        this.protocolType = protocolType;
     }
+
+
+
+
+
 
     public String getDesc() {
         return desc;
     }
 
-    public String getType() {
-        return type;
+    public String getDbType() {
+        return dbType;
     }
+
+    public String getProtocolType() {
+        return protocolType;
+    }
+
 
     public String getDriver() {
         return driver;
@@ -64,5 +76,9 @@ public class DBConnectionData {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getAdapterName(){
+        return this.getDbType() + this.getProtocolType();
     }
 }
