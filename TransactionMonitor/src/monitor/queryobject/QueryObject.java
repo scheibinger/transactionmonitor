@@ -20,6 +20,7 @@ public class QueryObject {
     public static final String INSERT = "INSERT";
     public static final String DELETE = "DELETE";
     public static final String UPDATE = "UPDATE";
+    public static final String SELECT = "SELECT";
 
     private List criteria = new ArrayList();
     private List parameters = new ArrayList();
@@ -93,6 +94,8 @@ public class QueryObject {
                query+=param.getField()+"="+param.getValue()+",";
            }
            query = query.substring(0, query.length()-1);
+       } else if (queryType.equals(QueryObject.SELECT)){
+           query += "SELECT * FROM "+tableName;
        }
         if (criteria != null && !criteria.isEmpty() && !queryType.equals(QueryObject.INSERT)){
             query += " WHERE ";
