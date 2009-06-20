@@ -76,8 +76,8 @@ public class QueryObject {
                    query1+=param.getField()+",";
                    query2+=param.getValue()+",";
                }
-               query1 = query1.substring(0, query1.length()-2);
-               query2 = query2.substring(0, query2.length()-2);
+               query1 = query1.substring(0, query1.length()-1);
+               query2 = query2.substring(0, query2.length()-1);
                query1 += ")";
                query2 += ")";
                query += query1+query2;
@@ -92,7 +92,7 @@ public class QueryObject {
                QueryParameter param = (QueryParameter) parameters.get(i);
                query+=param.getField()+"="+param.getValue()+",";
            }
-           query = query.substring(0, query.length()-2);
+           query = query.substring(0, query.length()-1);
        }
         if (criteria != null && !criteria.isEmpty() && !queryType.equals(QueryObject.INSERT)){
             query += " WHERE ";
