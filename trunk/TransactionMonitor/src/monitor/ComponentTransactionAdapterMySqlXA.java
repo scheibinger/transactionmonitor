@@ -4,6 +4,7 @@
  */
 package monitor;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,8 +28,9 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
 
         this.dbcd = dbcd;
         try {
+            Class.forName(this.dbcd.getDriver());
             this.connection = DriverManager.getConnection(this.dbcd.driver, this.dbcd.user, this.dbcd.password);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
         }
 
