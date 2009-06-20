@@ -104,7 +104,7 @@ public class QueryObject {
                 }
             }
         }  
-        return query;
+        return (query+";");
     }
 
     public String getQueryType() {
