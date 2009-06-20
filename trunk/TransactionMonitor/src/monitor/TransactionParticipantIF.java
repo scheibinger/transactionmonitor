@@ -10,7 +10,7 @@ package monitor;
  * @author gofer
  */
 public interface TransactionParticipantIF {
-    public boolean startTransaction();
+    public boolean startTransaction(DBConnectionData dbcd, ComponentTransaction ct);
     public boolean commitTransaction();
     public boolean abortTransaction();
 }

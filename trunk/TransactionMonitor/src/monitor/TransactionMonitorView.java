@@ -141,9 +141,11 @@ public class TransactionMonitorView extends FrameView {
         for (int i = 0; i < dbList.size(); i++) {
             DBConnectionData db = (DBConnectionData) dbList.get(i);
             model.addElement(db.getDesc());
+
         }
         return model;
     }
+
 
     private ComboBoxModel operatorsComboModel() {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
@@ -183,7 +185,7 @@ public class TransactionMonitorView extends FrameView {
 
 
         String type = this.dbProtocolComboBox.getSelectedItem().toString();
-        DBConnectionData db = new DBConnectionData(driver, url, user, password, desc, type);
+        DBConnectionData db = new DBConnectionData(driver, url, user, password, desc, type, dbType);
 
         dbList.add(db);
         this.operationDbComboBox.setModel(operationDbComboMOdel());
@@ -247,8 +249,15 @@ public class TransactionMonitorView extends FrameView {
         v.add(this.operationDbComboBox.getSelectedItem());
         v.add(query);
         this.operationsTableModel.addRow(v);
-        StateSavingClass ssc = new StateSavingClass();
-        ssc.save(qo);
+            
+            int sindex = operationDbComboBox.getSelectedIndex();
+            DBConnectionData dbcd = (DBConnectionData) TransactionLogic.getInstance().getDbConnectionList().elementAt(sindex);
+            TransactionLogic.getInstance().addAtomicTransaction(qo,dbcd);
+        try {
+        System.out.println(qo.generateQuery());
+        } catch (Exception e) {}
+
+
     }
 
     /**
@@ -346,7 +355,7 @@ public class TransactionMonitorView extends FrameView {
 
         jSeparator1.setName("jSeparator1"); // NOI18N
 
-        dbTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "mysql", "postgresql" }));
+        dbTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "MySql", "PostgreSql" }));
         dbTypeComboBox.setName("dbTypeComboBox"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(monitor.TransactionMonitorApp.class).getContext().getResourceMap(TransactionMonitorView.class);
@@ -505,7 +514,7 @@ public class TransactionMonitorView extends FrameView {
             }
         });
 
-        dbProtocolComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2PC AGH", "XA" }));
+        dbProtocolComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2PC", "XA" }));
         dbProtocolComboBox.setName("dbProtocolComboBox"); // NOI18N
 
         jLabel17.setText(resourceMap.getString("jLabel17.text")); // NOI18N
