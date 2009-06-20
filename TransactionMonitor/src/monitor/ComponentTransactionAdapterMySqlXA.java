@@ -25,11 +25,12 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
 
     public boolean startTransaction(DBConnectionData dbcd, ComponentTransaction ct) {
         this.key = String.valueOf(this.hashCode());
-
+        this.success = true;
         this.dbcd = dbcd;
         try {
+
             Class.forName(this.dbcd.getDriver());
-            this.connection = DriverManager.getConnection(this.dbcd.driver, this.dbcd.user, this.dbcd.password);
+            this.connection = DriverManager.getConnection(this.dbcd.url, this.dbcd.user, this.dbcd.password);
         } catch (Exception ex) {
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -39,14 +40,16 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
         try {
             stmt = connection.createStatement();
 
-            this.success &= stmt.execute("xa start " + this.key);
+            stmt.execute("xa start \"" + this.key + '"');
+
             for (Operation oper : ct) {
-                this.success &= oper.execute(stmt);
-                if (this.success) break;
+                oper.execute(stmt);
+
             }
-            this.success &= stmt.execute("xa end " + this.key);
-            this.success &= stmt.execute("xa prepare " + this.key);
+            stmt.execute("xa end \"" + this.key + '"');
+            stmt.execute("xa prepare \"" + this.key + '"');
         } catch (SQLException ex) {
+            this.success = false;
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
         }
         return this.success;
@@ -55,7 +58,7 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
 
     public boolean commitTransaction() {
         try {
-            return connection.createStatement().execute("xa prepare " + this.key);
+            return connection.createStatement().execute("xa commit \"" + this.key + '"');
         } catch (SQLException ex) {
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -64,7 +67,7 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
 
     public boolean abortTransaction() {
         try {
-            return connection.createStatement().execute("xa prepare " + this.key);
+            return connection.createStatement().execute("xa rollback \"" + this.key + '"');
         } catch (SQLException ex) {
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
         }
