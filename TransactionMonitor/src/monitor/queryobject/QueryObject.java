@@ -26,7 +26,7 @@ public class QueryObject {
 
     private String tableName = null;
     private String queryType = null;
-    
+    private String query = null;
     public QueryObject(String queryType, String tableName, List criteria, List params){
         this.tableName = tableName;
         this.queryType = queryType;
@@ -94,7 +94,7 @@ public class QueryObject {
            }
            query = query.substring(0, query.length()-2);
        }
-        if (criteria != null && !criteria.isEmpty()){
+        if (criteria != null && !criteria.isEmpty() && !queryType.equals(QueryObject.INSERT)){
             query += " WHERE ";
             for (int i=0; i<this.criteria.size(); i++){
                 Criteria cr = (Criteria) criteria.get(i);
@@ -122,5 +122,14 @@ public class QueryObject {
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
-
+    public String getQuery(){
+        if (query == null){
+            try {
+                return generateQuery();
+            } catch (Exception e){
+                System.out.println("Wystapil blad podczas generowania zapytania: "+e.getMessage());
+            }
+        }
+        return query;     
+    }
  }
