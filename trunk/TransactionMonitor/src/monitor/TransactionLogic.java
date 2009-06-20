@@ -54,13 +54,10 @@ public class TransactionLogic {
         boolean allOK = true;
         for(DBConnectionData dbcd :dbConnectionList){
             boolean isOK = true;
-
             if(componentTransactionList.containsKey(dbcd)){
-
                 TransactionParticipantIF adapter = ComponentTransactionAdapterFactory.CreateAdapter(dbcd.getAdapterName());
                 isOK = adapter.startTransaction(dbcd,componentTransactionList.get(dbcd));
                 adapterList.add(adapter);
-
             }
 
             allOK &= isOK ;

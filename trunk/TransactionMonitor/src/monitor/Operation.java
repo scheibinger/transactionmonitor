@@ -47,7 +47,7 @@ public class Operation {
     }
 
     public boolean execute(Statement stmt) throws SQLException {
-        this.success = stmt.execute(this.query.getQuery());
+        stmt.execute(this.query.getQuery());
         return this.success;
     }
 }
