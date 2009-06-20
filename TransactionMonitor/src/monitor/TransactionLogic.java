@@ -5,6 +5,7 @@
  */
 package monitor;
 
+
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
@@ -51,12 +52,20 @@ public class TransactionLogic {
      */
     public boolean startTransaction() {
         boolean allOK = true;
-        Iterator<DBConnectionData> dbcd = (Iterator<DBConnectionData>) dbConnectionList.iterator();
-        for (;dbcd.hasNext() && allOK;dbcd.next()){
-            TransactionParticipantIF adapter = ComponentTransactionAdapterFactory.CreateAdapter(((DBConnectionData)dbcd).getAdapterName());
-            boolean isOK = adapter.startTransaction(((DBConnectionData)dbcd),componentTransactionList.get(((DBConnectionData)dbcd)));
-            adapterList.add(adapter);
-            allOK = isOK & allOK;
+        for(DBConnectionData dbcd :dbConnectionList){
+            boolean isOK = true;
+
+            if(componentTransactionList.containsKey(dbcd)){
+
+                TransactionParticipantIF adapter = ComponentTransactionAdapterFactory.CreateAdapter(dbcd.getAdapterName());
+                isOK = adapter.startTransaction(dbcd,componentTransactionList.get(dbcd));
+                adapterList.add(adapter);
+
+            }
+
+            allOK &= isOK ;
+            if (!allOK)
+                break;
         }
         if(allOK) commitTransaction();
         else abortTransaction();
@@ -108,6 +117,16 @@ public class TransactionLogic {
     }
 
     public void loadDefaultDbConnections() {
+
+                // Baza1 MySQL 5
+        String driver4 = "com.mysql.jdbc.Driver";
+        String url4 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_6";
+        String user4 = "ares-system_6";
+        String password4 = "TEsttest1";
+        String desc4 = "MySql Ares6 XA";
+        String dbType4 = "MySql";
+        String protocolType4 = "XA";
+        this.addDbConnection(driver4, url4, user4, password4, desc4, dbType4, protocolType4);
         // Baza1 MySQL 5
         String driver1 = "com.mysql.jdbc.Driver";
         String url1 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_6";
@@ -115,7 +134,7 @@ public class TransactionLogic {
         String password1 = "TEsttest1";
         String desc1 = "MySql Ares6";
         String dbType1 = "MySql";
-        String protocolType1 = "";
+        String protocolType1 = ""; 
         this.addDbConnection(driver1, url1, user1, password1, desc1, dbType1, protocolType1);
 
         // Baza2 MySQL 5
@@ -138,15 +157,7 @@ public class TransactionLogic {
         String protocolType3 = "";
         this.addDbConnection(driver3, url3, user3, password3,desc3,dbType3, protocolType3);
 
-        // Baza1 MySQL 5
-        String driver4 = "com.mysql.jdbc.Driver";
-        String url4 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_6";
-        String user4 = "ares-system_6";
-        String password4 = "TEsttest1";
-        String desc4 = "MySql Ares6 XA";
-        String dbType4 = "MySql";
-        String protocolType4 = "XA";
-        this.addDbConnection(driver4, url4, user4, password4, desc4, dbType4, protocolType4);
+
 
         // Baza2 MySQL 5
         String driver5 = "com.mysql.jdbc.Driver";

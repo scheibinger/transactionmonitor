@@ -310,7 +310,7 @@ public class TransactionMonitorView extends FrameView {
         operationKeyTextField = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         operationValueTextField = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        startCompositeTransactionButton = new javax.swing.JButton();
         addParemeterButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         addOperationButton = new javax.swing.JButton();
@@ -428,8 +428,13 @@ public class TransactionMonitorView extends FrameView {
         operationValueTextField.setText(resourceMap.getString("operationValueTextField.text")); // NOI18N
         operationValueTextField.setName("operationValueTextField"); // NOI18N
 
-        jButton2.setText(resourceMap.getString("startCompositeTransactionButton.text")); // NOI18N
-        jButton2.setName("startCompositeTransactionButton"); // NOI18N
+        startCompositeTransactionButton.setText(resourceMap.getString("startCompositeTransactionButton.text")); // NOI18N
+        startCompositeTransactionButton.setName("startCompositeTransactionButton"); // NOI18N
+        startCompositeTransactionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startCompositeTransactionButtonActionPerformed(evt);
+            }
+        });
 
         addParemeterButton.setText(resourceMap.getString("operationAddPrameterButton.text")); // NOI18N
         addParemeterButton.setName("operationAddPrameterButton"); // NOI18N
@@ -658,7 +663,7 @@ public class TransactionMonitorView extends FrameView {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
+                            .addComponent(startCompositeTransactionButton)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(29, 29, 29))
         );
@@ -752,7 +757,7 @@ public class TransactionMonitorView extends FrameView {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
-                .addComponent(jButton2)
+                .addComponent(startCompositeTransactionButton)
                 .addContainerGap())
         );
 
@@ -888,6 +893,14 @@ public class TransactionMonitorView extends FrameView {
         }
 }//GEN-LAST:event_operationsTableKeyPressed
 
+    private void startCompositeTransactionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startCompositeTransactionButtonActionPerformed
+        // TODO add your handling code here:
+        if(TransactionLogic.getInstance().startTransaction()){
+            System.out.print("jest ok!");
+        }else
+            System.out.print("gowno!");
+}//GEN-LAST:event_startCompositeTransactionButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCriteriaButton;
     private javax.swing.JButton addDbButton;
@@ -905,7 +918,6 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JComboBox dbProtocolComboBox;
     private javax.swing.JComboBox dbTypeComboBox;
     private javax.swing.JTextField dbUserTextField;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -943,6 +955,7 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JTable operationsTable;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton resetOperationButton;
+    private javax.swing.JButton startCompositeTransactionButton;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
