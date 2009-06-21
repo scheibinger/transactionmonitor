@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +30,7 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
         Statement stmt;
         try {
             stmt = connection.createStatement();
-            stmt.executeUpdate("UNLOCK TABLES");
+       //     stmt.executeUpdate("UNLOCK TABLES");
         } catch (SQLException ex) {
             this.success = false;
             Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
@@ -42,10 +43,13 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
         try {
             stmt = connection.createStatement();
             for (Operation oper : ct) {
-                if (!oper.success)
-                    stmt.execute(oper.query.getRollbackQuery());
+                if (oper.success){
+                    Vector rollback = oper.getQueryObject().getRollbackQueries();
+                    for (int i=0; i< rollback.size(); i++)
+                    stmt.execute((String)rollback.get(i));
+                }
             }
-            stmt.executeUpdate("UNLOCK TABLES");
+      //      stmt.executeUpdate("UNLOCK TABLES");
         } catch (SQLException ex) {
             this.success = false;
             Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);

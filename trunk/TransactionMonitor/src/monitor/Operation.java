@@ -58,7 +58,7 @@ public class Operation {
         String queryContent = this.query.getQuery();
         //lockowanie tabeli
         try {
-        stmt.executeUpdate("LOCK TABLES "+query.getTableName()+" WRITE");
+      //  stmt.executeUpdate("LOCK TABLES "+query.getTableName()+" WRITE");
         if (queryType.equals(QueryObject.INSERT)){
 
             stmt.execute(queryContent,Statement.RETURN_GENERATED_KEYS);
