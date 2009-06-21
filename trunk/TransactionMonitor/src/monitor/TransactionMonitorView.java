@@ -960,6 +960,7 @@ public class TransactionMonitorView extends FrameView {
 
     private void addOperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addOperationButtonActionPerformed
         this.addOperation();
+        this.resetOperations();
     }//GEN-LAST:event_addOperationButtonActionPerformed
 
     private void resetOperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetOperationButtonActionPerformed
