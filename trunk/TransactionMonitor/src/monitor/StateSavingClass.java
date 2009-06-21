@@ -6,7 +6,9 @@
 
 package monitor;
 
+import java.sql.ResultSetMetaData;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.Statement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -29,9 +31,9 @@ public class StateSavingClass {
         }
         String query = qo.getQuery();
         // ******INSERT //////////////
-       //query = "INSERT INTO pensja VALUES (10, 5, 125630);";
+       query = "INSERT INTO pensja VALUES (43, 5, 125630);";
      ////
-        query = "UPDATE pensja SET pen_prc_id=20 WHERE pen_id=10;";
+  //      query = "UPDATE pensja SET pen_prc_id=20 WHERE pen_id=10;";
         ResultSet rs = null;
         try {
         String driver1 = "com.mysql.jdbc.Driver";
@@ -41,17 +43,11 @@ public class StateSavingClass {
         Class.forName(driver1);
         Connection connection = DriverManager.getConnection(url1 , user1, password1);
         Statement statement = connection.createStatement(ResultSet.CONCUR_UPDATABLE, ResultSet.TYPE_FORWARD_ONLY);
+
         
-        //  INSERT
-        statement.execute(query,Statement.RETURN_GENERATED_KEYS);
-        ResultSet keys = statement.getGeneratedKeys();
-        if (keys != null){
-            while (keys.next()){
-                   System.out.println(keys.getInt(1));
-            }
-        }
+
         /// DELETE
-        statement.execute("INSERT INTO pensja (pen_id,pen_prc_id,pen_kwota) VALUES (10,20,30);");
+        /*statement.execute("INSERT INTO pensja (pen_id,pen_prc_id,pen_kwota) VALUES (10,20,30);");
         statement.execute("SELECT * FROM pensja WHERE pen_id=10;");
         rs = statement.getResultSet();
         if (rs != null){
@@ -72,7 +68,7 @@ public class StateSavingClass {
             System.out.println(rs.getInt("pen_id")+" "+ rs.getInt("pen_kwota"));
         }
 //////////delete - koniec
-
+*/
 //////////////////update
 
 

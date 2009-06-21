@@ -5,23 +5,80 @@
 
 package monitor;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author marcin
  */
 public class ComponentTransactionAdapterMySql  implements TransactionParticipantIF{
 
+    Connection connection;
+    DBConnectionData dbcd;
+    String key;
+    ComponentTransaction ct;
+    boolean success = true;
 
     public boolean commitTransaction() {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        Statement stmt;
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate("UNLOCK TABLES");
+        } catch (SQLException ex) {
+            this.success = false;
+            Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
     }
 
     public boolean abortTransaction() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Statement stmt;
+        try {
+            stmt = connection.createStatement();
+            for (Operation oper : ct) {
+                if (!oper.success)
+                    stmt.execute(oper.query.getRollbackQuery());
+            }
+            stmt.executeUpdate("UNLOCK TABLES");
+        } catch (SQLException ex) {
+            this.success = false;
+            Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
     }
 
     public boolean startTransaction(DBConnectionData dbcd, ComponentTransaction ct) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.ct = ct;
+        this.key = String.valueOf(this.hashCode());
+        this.success = true;
+        this.dbcd = dbcd;
+        try {
+            Class.forName(this.dbcd.getDriver());
+            this.connection = DriverManager.getConnection(this.dbcd.url, this.dbcd.user, this.dbcd.password);
+        } catch (Exception ex) {
+            Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Statement stmt;
+        try {
+            stmt = connection.createStatement();
+
+            for (Operation oper : ct) {
+                oper.execute(stmt);
+            }
+
+        } catch (SQLException ex) {
+            this.success = false;
+            Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return this.success;
     }
 
 }

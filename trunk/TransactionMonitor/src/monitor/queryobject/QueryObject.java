@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *I * @author gofer
@@ -28,13 +29,17 @@ public class QueryObject {
     private String tableName = null;
     private String queryType = null;
     private String query = null;
+    private String rollbackQuery = null;
+
     public QueryObject(String queryType, String tableName, List criteria, List params){
         this.tableName = tableName;
         this.queryType = queryType;
         this.criteria = criteria;
         this.parameters = params;
     }
-
+    public QueryObject(){
+    }
+    
     public List execute(String driver, String user, String passwd, String query){
         query = "";
         ResultSet rs = null;
@@ -66,8 +71,8 @@ public class QueryObject {
         }
         return q;
     }
-    public String generateQuery() throws Exception{
-       String query = "";
+    private String generateQuery() throws Exception{
+        this.query = "";
         if (queryType.equals(QueryObject.INSERT)){
            String query1 = "INSERT INTO "+tableName+" (";
            String query2 = " VALUES (";
@@ -109,6 +114,24 @@ public class QueryObject {
         }  
         return (query+";");
     }
+    public void generateInsertRollbackQuery(String colName,Vector keys){
+        this.rollbackQuery = "DELETE FROM "+this.tableName+" WHERE "+colName+" IN (";
+        for (int i=0; i<keys.size(); i++){
+            rollbackQuery += (String) keys.get(i)+",";
+        }
+        rollbackQuery = rollbackQuery.substring(0,rollbackQuery.length()-1);
+       rollbackQuery+=");";
+    }
+    public void generateDeleteRollbackQuery(){
+        this.rollbackQuery = "INSERT "+tableName+" SELECT * FROM "+tableName+"_temp;";
+        rollbackQuery += "DROP TABLE "+tableName+"_temp;";
+    }
+    public void generateUpdateRollbackQuery(){
+        QueryObject deleteQuery = new QueryObject(QueryObject.DELETE,tableName,criteria,null);
+        rollbackQuery = deleteQuery.getQuery();
+        rollbackQuery+= "INSERT "+tableName+" SELECT * FROM "+tableName+"_temp;";
+        rollbackQuery += "DROP TABLE "+tableName+"_temp;";
+    }
 
     public String getQueryType() {
         return queryType;
@@ -135,4 +158,24 @@ public class QueryObject {
         }
         return query;     
     }
+    public String getRollbackQuery(){
+        return rollbackQuery;
+    }
+
+    public List getCriteria() {
+        return criteria;
+    }
+
+    public void setCriteria(List criteria) {
+        this.criteria = criteria;
+    }
+
+    public List getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List parameters) {
+        this.parameters = parameters;
+    }
+
  }

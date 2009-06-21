@@ -43,7 +43,7 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
             stmt.execute("xa start \"" + this.key + '"');
 
             for (Operation oper : ct) {
-                oper.execute(stmt);
+                oper.executeXA(stmt);
 
             }
             stmt.execute("xa end \"" + this.key + '"');
