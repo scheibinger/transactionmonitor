@@ -21,7 +21,10 @@ public class ComponentTransactionAdapterFactory {
         else if(type.equals("PostgreSql")){
             return new ComponentTransactionAdapterPostgreSql();
         }
-        else throw new UnsupportedOperationException("Not supported yet.");
+		else if(type.equals("PostgreSqlXA")){
+            return new ComponentTransactionAdapterPostgreSqlXA();
+        }
+		else throw new UnsupportedOperationException("Not supported yet.");
 
     }
 

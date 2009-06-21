@@ -155,6 +155,15 @@ public class TransactionLogic {
         this.addDbConnection(driver3, url3, user3, password3,desc3,dbType3, protocolType3);
 
 
+		        // Baza3 PostgreSQL 8.3
+        String driver6 = "org.postgresql.Driver";
+        String url6 = "jdbc:postgresql://sql.ares-system.nazwa.pl:5433/ares-system_8";
+        String user6 = "ares-system_8";
+        String password6 = "TEsttest1";
+        String desc6 = "PostgreSql Ares8 XA";
+        String dbType6 = "PostgreSql";
+        String protocolType6 = "XA";
+        this.addDbConnection(driver6, url6, user6, password6,desc6,dbType6, protocolType6);
 
         // Baza2 MySQL 5
         String driver5 = "com.mysql.jdbc.Driver";
