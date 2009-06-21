@@ -60,7 +60,7 @@ public class Operation {
         try {
         
         if (queryType.equals(QueryObject.INSERT)){
-       //     stmt.executeUpdate("LOCK TABLES "+query.getTableName()+" WRITE");
+            stmt.executeUpdate("LOCK TABLES "+query.getTableName()+" WRITE");
             stmt.execute(queryContent,Statement.RETURN_GENERATED_KEYS);
 
             //pobranie primary keys wstawionych rekordow
@@ -88,8 +88,9 @@ public class Operation {
             ResultSet srs = stmt.getResultSet();
             if (srs != null){
                 stmt.execute("CREATE TABLE "+query.getTableName()+"_temp AS "+selectQuery.getQuery());
-         //       stmt.executeUpdate("LOCK TABLES "+query.getTableName()+"_temp WRITE");
-          //      stmt.executeUpdate("LOCK TABLES "+query.getTableName()+" WRITE");
+                stmt.executeUpdate("LOCK TABLES "+
+                        query.getTableName()+"_temp WRITE, "+
+                        query.getTableName()+" WRITE;");              
             }
             //tworzenie tabeli tymczasowej - KONIEC
 
