@@ -4,6 +4,8 @@
  */
 package monitor;
 
+import java.util.Vector;
+
 /**
  *
  * @author ASUS
@@ -17,7 +19,8 @@ public class DBConnectionData {
     String password;
     String dbType;
     String protocolType;
-
+    Vector tablesList = new Vector();
+    
     public DBConnectionData( String driver, String url, String user, String password, String desc, String dbType, String protocolType) {
         this.desc = desc;
         this.driver = driver;
@@ -81,4 +84,13 @@ public class DBConnectionData {
     public String getAdapterName(){
         return this.getDbType() + this.getProtocolType();
     }
+
+    public Vector getTablesList() {
+        return tablesList;
+    }
+
+    public void setTablesList(Vector tablesList) {
+        this.tablesList = tablesList;
+    }
+    
 }
