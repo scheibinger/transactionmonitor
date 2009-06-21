@@ -7,8 +7,8 @@ package monitor;
 
 
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Vector;
+import monitor.MyLogger.MyLogger;
 import monitor.queryobject.QueryObject;
 
 /**
@@ -39,6 +39,8 @@ public class TransactionLogic {
         return instance;
     }
 
+
+
     public boolean openTransaction() {
         this.componentTransactionList = new Hashtable<Object, ComponentTransaction>();
         return false;
@@ -51,6 +53,7 @@ public class TransactionLogic {
      * @return boolean Czy globalna transakcja się udała.
      */
     public boolean startTransaction() {
+		MyLogger.log("Początek transakcji.");
         boolean allOK = true;
         for(DBConnectionData dbcd :dbConnectionList){
             boolean isOK = true;
@@ -64,9 +67,16 @@ public class TransactionLogic {
             if (!allOK)
                 break;
         }
-        if(allOK) commitTransaction();
-        else abortTransaction();
+        if(allOK) {
+			MyLogger.log("Transakcja zakończyła się sukcesem.");
+			commitTransaction();
+		}
+        else {
+			MyLogger.log("Transakcja zakończyła się porażką.");
+			abortTransaction();
+		}
 
+		MyLogger.log("Koniec transakcji.");
         return allOK;
     }
 
