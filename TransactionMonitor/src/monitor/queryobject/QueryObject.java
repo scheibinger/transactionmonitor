@@ -131,11 +131,17 @@ public class QueryObject {
         rollbackQueries.add(rollbackQuery1);
     }
     public void generateUpdateRollbackQuery(){
-        QueryObject deleteQuery = new QueryObject(QueryObject.DELETE,tableName,criteria,null);
+        List crits = new ArrayList();
+        for (int i=0; i<parameters.size(); i++){
+            QueryParameter par = (QueryParameter) parameters.get(i);
+            crits.add(new Criteria(par.getField(), Criteria.EQ , par.getValue()));
+        }
+        QueryObject deleteQuery = new QueryObject(QueryObject.DELETE,tableName,crits,null);
         String rollbackQuery = deleteQuery.getQuery();
         String rollbackQuery1 = "INSERT "+tableName+" SELECT * FROM "+tableName+"_temp;";
         String rollbackQuery2 = "DROP TABLE "+tableName+"_temp;";
         rollbackQueries.add(rollbackQuery);
+        rollbackQueries.add("COMMIT;");
         rollbackQueries.add(rollbackQuery1);
         rollbackQueries.add(rollbackQuery2);
     }
