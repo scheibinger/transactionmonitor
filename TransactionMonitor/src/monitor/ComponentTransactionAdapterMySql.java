@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import monitor.queryobject.QueryObject;
 
 /**
  *
@@ -30,7 +31,13 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
         Statement stmt;
         try {
             stmt = connection.createStatement();
-       //     stmt.executeUpdate("UNLOCK TABLES");
+            for (Operation oper : ct){
+                QueryObject qo = oper.getQueryObject();
+                if (!qo.getQueryType().equals(QueryObject.INSERT)){
+                    stmt.execute("DROP TABLE "+qo.getTableName()+"_temp;");
+                }
+            }
+            stmt.executeUpdate("UNLOCK TABLES");
         } catch (SQLException ex) {
             this.success = false;
             Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
@@ -44,12 +51,14 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
             stmt = connection.createStatement();
             for (Operation oper : ct) {
                 if (oper.success){
+   //                 if (oper.getQueryObject().equals(QueryObject.UPDATE))
+    //                stmt.execute("UNLOCK TABLES");
                     Vector rollback = oper.getQueryObject().getRollbackQueries();
                     for (int i=0; i< rollback.size(); i++)
                     stmt.execute((String)rollback.get(i));
                 }
             }
-      //      stmt.executeUpdate("UNLOCK TABLES");
+  //          stmt.executeUpdate("UNLOCK TABLES");
         } catch (SQLException ex) {
             this.success = false;
             Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);

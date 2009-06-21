@@ -16,6 +16,8 @@ public class Criteria {
     public static final String LIKE = " LIKE ";
     public static final String AND = " AND ";
     public static final String OR = " OR ";
+    public static final String IS = " IS ";
+    public static final String ISNOT = " IS NOT ";
     private String sqlOperator = null;
     private String field = null;
     private String value=null;
