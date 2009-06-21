@@ -11,6 +11,11 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -230,7 +235,7 @@ public class TransactionMonitorView extends FrameView {
 
     private void addOperation() {
         String queryType = (String) this.operationTypeComboBox.getSelectedItem();
-        String tableName = this.operationTableTextField.getText();
+        String tableName = (String) this.tableListComboBox.getSelectedItem();
         List criterions = new ArrayList();
         for (int i=0; i<criteriaTableModel.getRowCount();i++){
          Criteria cr = new Criteria((String)criteriaTableModel.getValueAt(i, 0),
@@ -261,6 +266,35 @@ public class TransactionMonitorView extends FrameView {
 
     }
 
+    private ComboBoxModel getTableListComboBoxModel(){
+        DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
+        int sindex = operationDbComboBox.getSelectedIndex();
+            DBConnectionData dbcd = (DBConnectionData) 
+                TransactionLogic.getInstance().getDbConnectionList().elementAt(sindex);
+        if (dbcd.getTablesList().isEmpty()){
+         try {
+        Class.forName(dbcd.getDriver());
+        Connection connection = DriverManager.getConnection(dbcd.getUrl() , dbcd.getUser(), 
+                                 dbcd.getPassword());
+        Statement statement = connection.createStatement();
+        statement.execute("SHOW tables;");
+        ResultSet rs = statement.getResultSet();
+        while (rs.next()){
+            dcbm.addElement(rs.getString(1));
+            dbcd.getTablesList().add(rs.getString(1));
+        }
+        } catch (SQLException sqle){
+            MyLogger.log(sqle.getMessage());
+        } catch (ClassNotFoundException cnfe){
+            MyLogger.log(cnfe.getMessage());
+        }
+        } else {
+                for (int i=0; i<dbcd.getTablesList().size(); i++){
+                dcbm.addElement((String)dbcd.getTablesList().get(i));
+                }
+        }
+        return dcbm;
+    }
     /**
      * 
      */
@@ -311,7 +345,6 @@ public class TransactionMonitorView extends FrameView {
         resetOperationButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         operationParametersTable = new javax.swing.JTable();
-        operationTableTextField = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -327,6 +360,7 @@ public class TransactionMonitorView extends FrameView {
         jScrollPane3 = new javax.swing.JScrollPane();
         operationsTable = new javax.swing.JTable();
         newCompositeTransaction = new javax.swing.JButton();
+        tableListComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -373,6 +407,11 @@ public class TransactionMonitorView extends FrameView {
 
         operationDbComboBox.setModel(this.operationDbComboMOdel());
         operationDbComboBox.setName("operationDbComboBox"); // NOI18N
+        operationDbComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                operationDbComboBoxActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText(resourceMap.getString("jLabel7.text")); // NOI18N
         jLabel7.setName("jLabel7"); // NOI18N
@@ -446,9 +485,6 @@ public class TransactionMonitorView extends FrameView {
         });
         jScrollPane1.setViewportView(operationParametersTable);
 
-        operationTableTextField.setText(resourceMap.getString("operationTableTextField.text")); // NOI18N
-        operationTableTextField.setName("operationTableTextField"); // NOI18N
-
         jLabel12.setText(resourceMap.getString("jLabel12.text")); // NOI18N
         jLabel12.setName("jLabel12"); // NOI18N
 
@@ -515,6 +551,10 @@ public class TransactionMonitorView extends FrameView {
             }
         });
 
+        tableListComboBox.setEditable(true);
+        tableListComboBox.setModel(getTableListComboBoxModel());
+        tableListComboBox.setName("tableListComboBox"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -561,14 +601,14 @@ public class TransactionMonitorView extends FrameView {
                                 .addComponent(addParemeterButton))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
                             .addComponent(operationTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(operationDbComboBox, 0, 500, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel12)
-                                .addGap(10, 10, 10)
-                                .addComponent(operationTableTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tableListComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(startCompositeTransactionButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -584,9 +624,9 @@ public class TransactionMonitorView extends FrameView {
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(operationDbComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(operationTableTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel12))
+                    .addComponent(jLabel12)
+                    .addComponent(tableListComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(operationTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -873,7 +913,7 @@ public class TransactionMonitorView extends FrameView {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 591, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -995,6 +1035,10 @@ public class TransactionMonitorView extends FrameView {
         TransactionLogic.getInstance().restartTransaction();
     }//GEN-LAST:event_newCompositeTransactionActionPerformed
 
+private void operationDbComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operationDbComboBoxActionPerformed
+this.tableListComboBox.setModel(getTableListComboBoxModel());
+}//GEN-LAST:event_operationDbComboBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCriteriaButton;
@@ -1050,7 +1094,6 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JComboBox operationDbComboBox;
     private javax.swing.JTextField operationKeyTextField;
     private javax.swing.JTable operationParametersTable;
-    private javax.swing.JTextField operationTableTextField;
     private javax.swing.JComboBox operationTypeComboBox;
     private javax.swing.JTextField operationValueTextField;
     private javax.swing.JTable operationsTable;
@@ -1060,6 +1103,7 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JComboBox tableListComboBox;
     // End of variables declaration//GEN-END:variables
     private final Timer messageTimer;
     private final Timer busyIconTimer;
