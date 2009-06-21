@@ -100,6 +100,8 @@ public class TransactionLogic {
     }
 
     public boolean restartTransaction() {
+        this.adapterList.clear();
+        this.componentTransactionList.clear();
         return false;
     }
 
