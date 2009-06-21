@@ -29,7 +29,7 @@ public class QueryObject {
     private String tableName = null;
     private String queryType = null;
     private String query = null;
-    private String rollbackQuery = null;
+    private Vector rollbackQueries = new Vector();
 
     public QueryObject(String queryType, String tableName, List criteria, List params){
         this.tableName = tableName;
@@ -115,22 +115,29 @@ public class QueryObject {
         return (query+";");
     }
     public void generateInsertRollbackQuery(String colName,Vector keys){
-        this.rollbackQuery = "DELETE FROM "+this.tableName+" WHERE "+colName+" IN (";
+        String rollbackQuery = "DELETE FROM "+this.tableName+" WHERE "+colName+" IN (";
         for (int i=0; i<keys.size(); i++){
             rollbackQuery += (String) keys.get(i)+",";
         }
         rollbackQuery = rollbackQuery.substring(0,rollbackQuery.length()-1);
        rollbackQuery+=");";
+       rollbackQueries.add(rollbackQuery);
+
     }
     public void generateDeleteRollbackQuery(){
-        this.rollbackQuery = "INSERT "+tableName+" SELECT * FROM "+tableName+"_temp;";
-        rollbackQuery += "DROP TABLE "+tableName+"_temp;";
+        String rollbackQuery = "INSERT "+tableName+" SELECT * FROM "+tableName+"_temp;";
+        String rollbackQuery1 = "DROP TABLE "+tableName+"_temp;";
+        rollbackQueries.add(rollbackQuery);
+        rollbackQueries.add(rollbackQuery1);
     }
     public void generateUpdateRollbackQuery(){
         QueryObject deleteQuery = new QueryObject(QueryObject.DELETE,tableName,criteria,null);
-        rollbackQuery = deleteQuery.getQuery();
-        rollbackQuery+= "INSERT "+tableName+" SELECT * FROM "+tableName+"_temp;";
-        rollbackQuery += "DROP TABLE "+tableName+"_temp;";
+        String rollbackQuery = deleteQuery.getQuery();
+        String rollbackQuery1 = "INSERT "+tableName+" SELECT * FROM "+tableName+"_temp;";
+        String rollbackQuery2 = "DROP TABLE "+tableName+"_temp;";
+        rollbackQueries.add(rollbackQuery);
+        rollbackQueries.add(rollbackQuery1);
+        rollbackQueries.add(rollbackQuery2);
     }
 
     public String getQueryType() {
@@ -158,8 +165,8 @@ public class QueryObject {
         }
         return query;     
     }
-    public String getRollbackQuery(){
-        return rollbackQuery;
+    public Vector getRollbackQueries(){
+        return rollbackQueries;
     }
 
     public List getCriteria() {
