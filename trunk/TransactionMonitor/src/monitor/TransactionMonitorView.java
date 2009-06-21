@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
+import monitor.MyLogger.MyLogger;
 import monitor.queryobject.Criteria;
 import monitor.queryobject.QueryObject;
 import monitor.queryobject.QueryParameter;
@@ -345,6 +346,10 @@ public class TransactionMonitorView extends FrameView {
         dbProtocolComboBox = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
         dbDescriptionTextField = new javax.swing.JTextField();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        logTextArea = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
         statusPanel = new javax.swing.JPanel();
         statusMessageLabel = new javax.swing.JLabel();
         statusAnimationLabel = new javax.swing.JLabel();
@@ -776,6 +781,54 @@ public class TransactionMonitorView extends FrameView {
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
+        jPanel3.setName("jPanel3"); // NOI18N
+
+        jScrollPane4.setName("jScrollPane4"); // NOI18N
+
+        logTextArea.setColumns(20);
+        logTextArea.setRows(5);
+        logTextArea.setEditable(false);
+        logTextArea.setName("logTextArea"); // NOI18N
+        MyLogger.getLogger();
+        MyLogger.setOutputTextArea(logTextArea);
+        jScrollPane4.setViewportView(logTextArea);
+
+        jButton1.setLabel(resourceMap.getString("clearLogButton.label")); // NOI18N
+        jButton1.setName("clearLogButton"); // NOI18N
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
+                    .addComponent(jButton1))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
+
         statusPanel.setName("statusPanel"); // NOI18N
 
         statusMessageLabel.setName("statusMessageLabel"); // NOI18N
@@ -927,12 +980,20 @@ public class TransactionMonitorView extends FrameView {
             System.out.print("gowno!");
 }//GEN-LAST:event_startCompositeTransactionButtonActionPerformed
 
+	private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+		// TODO add your handling code here:
+	}//GEN-LAST:event_jButton1MouseClicked
+
+	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		logTextArea.setText("");
+	}//GEN-LAST:event_jButton1ActionPerformed
     private void newCompositeTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCompositeTransactionActionPerformed
         // TODO add your handling code here:
         this.resetOperations();
         this.resetAddedOperations();
         TransactionLogic.getInstance().restartTransaction();
     }//GEN-LAST:event_newCompositeTransactionActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCriteriaButton;
@@ -951,6 +1012,7 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JComboBox dbProtocolComboBox;
     private javax.swing.JComboBox dbTypeComboBox;
     private javax.swing.JTextField dbUserTextField;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -974,10 +1036,13 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea logTextArea;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton newCompositeTransaction;
@@ -1004,4 +1069,5 @@ public class TransactionMonitorView extends FrameView {
     private DefaultTableModel operationParametersModel;
     private DefaultTableModel operationsTableModel;
     private JDialog aboutBox;
+
 }
