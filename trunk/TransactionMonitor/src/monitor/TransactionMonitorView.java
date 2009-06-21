@@ -35,7 +35,8 @@ public class TransactionMonitorView extends FrameView {
     private final String[] paramsTableHeader = {"Key", "Value"};
     private final String[] criteriaTableHeader = {"Key", "Operator", "Value"};
     private final String[] operationsTableHeader = {"Database", "Query"};
-    private final String[] operators = {Criteria.EQ, Criteria.GT, Criteria.LT, Criteria.LIKE};
+    private final String[] operators = {Criteria.EQ, Criteria.GT, Criteria.LT, Criteria.LIKE,
+                                        Criteria.IS, Criteria.ISNOT};
     private final String[] operations = {QueryObject.INSERT, QueryObject.DELETE, QueryObject.UPDATE};
 
     public TransactionMonitorView(SingleFrameApplication app) {
@@ -250,12 +251,11 @@ public class TransactionMonitorView extends FrameView {
         v.add(this.operationDbComboBox.getSelectedItem());
         v.add(query);
         this.operationsTableModel.addRow(v);
-            
             int sindex = operationDbComboBox.getSelectedIndex();
             DBConnectionData dbcd = (DBConnectionData) TransactionLogic.getInstance().getDbConnectionList().elementAt(sindex);
             TransactionLogic.getInstance().addAtomicTransaction(qo,dbcd);
         try {
-        System.out.println(qo.generateQuery());
+        System.out.println(qo.getQuery());
         } catch (Exception e) {}
 
 
@@ -873,7 +873,7 @@ public class TransactionMonitorView extends FrameView {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 591, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
