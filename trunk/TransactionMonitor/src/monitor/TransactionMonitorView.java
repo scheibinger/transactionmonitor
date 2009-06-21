@@ -268,9 +268,12 @@ public class TransactionMonitorView extends FrameView {
        this.clearTable(operationParametersModel);
 
     }
+    public void resetAddedOperations(){
+        this.clearTable(operationsTableModel);
+    }
     private void clearTable(DefaultTableModel model){
-        for (int i=0; i<model.getRowCount(); i++){
-            model.removeRow(i);
+        while (model.getRowCount() > 0) {
+            model.removeRow(model.getRowCount()-1);
         }
     }
     /**
@@ -322,6 +325,7 @@ public class TransactionMonitorView extends FrameView {
         jLabel21 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         operationsTable = new javax.swing.JTable();
+        newCompositeTransaction = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -497,6 +501,15 @@ public class TransactionMonitorView extends FrameView {
         });
         jScrollPane3.setViewportView(operationsTable);
 
+        newCompositeTransaction.setActionCommand(resourceMap.getString("newCompositeTransaction.actionCommand")); // NOI18N
+        newCompositeTransaction.setLabel(resourceMap.getString("newCompositeTransaction.label")); // NOI18N
+        newCompositeTransaction.setName("newCompositeTransaction"); // NOI18N
+        newCompositeTransaction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newCompositeTransactionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -551,7 +564,10 @@ public class TransactionMonitorView extends FrameView {
                                 .addComponent(operationTableTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)))
-                    .addComponent(startCompositeTransactionButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(startCompositeTransactionButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(newCompositeTransaction))
                     .addComponent(jLabel6))
                 .addContainerGap())
         );
@@ -605,7 +621,9 @@ public class TransactionMonitorView extends FrameView {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel21))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(startCompositeTransactionButton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newCompositeTransaction)
+                    .addComponent(startCompositeTransactionButton))
                 .addGap(137, 137, 137))
         );
 
@@ -909,6 +927,13 @@ public class TransactionMonitorView extends FrameView {
             System.out.print("gowno!");
 }//GEN-LAST:event_startCompositeTransactionButtonActionPerformed
 
+    private void newCompositeTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCompositeTransactionActionPerformed
+        // TODO add your handling code here:
+        this.resetOperations();
+        this.resetAddedOperations();
+        TransactionLogic.getInstance().restartTransaction();
+    }//GEN-LAST:event_newCompositeTransactionActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCriteriaButton;
     private javax.swing.JButton addDbButton;
@@ -955,6 +980,7 @@ public class TransactionMonitorView extends FrameView {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JButton newCompositeTransaction;
     private javax.swing.JComboBox operationDbComboBox;
     private javax.swing.JTextField operationKeyTextField;
     private javax.swing.JTable operationParametersTable;
