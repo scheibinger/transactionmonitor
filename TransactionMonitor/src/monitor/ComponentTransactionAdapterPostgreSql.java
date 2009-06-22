@@ -24,4 +24,9 @@ public class ComponentTransactionAdapterPostgreSql implements TransactionPartici
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public boolean getStatus() {
+           // return this.dbcd.status;
+        return true;
+    }
+
 }

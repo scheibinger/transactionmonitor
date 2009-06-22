@@ -18,6 +18,7 @@ public class DBConnectionData {
     String user;
     String password;
     String dbType;
+    boolean status;
     String protocolType;
     Vector tablesList = new Vector();
     

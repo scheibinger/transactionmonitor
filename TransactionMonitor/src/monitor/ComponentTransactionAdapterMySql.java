@@ -86,7 +86,7 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
             for (Operation oper : ct) {
                 oper.execute(stmt);
             }
-            MyLogger.log("Podtransakcja "+dbcd.getDesc()+ dbcd.getDbType()+" powiodła się!");
+            MyLogger.log("Podtransakcja "+dbcd.getDesc()+" powiodła się!");
         } catch (SQLException ex) {
             this.success = false;
             MyLogger.log("Podtransakcja "+dbcd.getDesc()+" nie powiodła się!");
@@ -94,6 +94,10 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
         }
 
         return this.success;
+    }
+
+    public boolean getStatus() {
+            return this.dbcd.status;
     }
 
 }

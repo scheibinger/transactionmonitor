@@ -79,4 +79,9 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
         return false;
     }
 
+
+    public boolean getStatus() {
+            return this.dbcd.status;
+    }
+
 }
