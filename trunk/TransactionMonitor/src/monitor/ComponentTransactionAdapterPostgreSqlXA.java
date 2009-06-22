@@ -45,7 +45,7 @@ public class ComponentTransactionAdapterPostgreSqlXA implements TransactionParti
             stmt.execute("BEGIN");
 
             for (Operation oper : ct) {
-                oper.execute(stmt);
+                oper.executeXA(stmt);
             }
             stmt.execute("PREPARE TRANSACTION '" + this.key + "'");
         } catch (SQLException ex) {

@@ -127,7 +127,7 @@ public class TransactionLogic {
 
     public void loadDefaultDbConnections() {
 
-                // Baza1 MySQL 5
+        // MySql Ares6 XA
         String driver4 = "com.mysql.jdbc.Driver";
         String url4 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_6";
         String user4 = "ares-system_6";
@@ -136,7 +136,18 @@ public class TransactionLogic {
         String dbType4 = "MySql";
         String protocolType4 = "XA";
         this.addDbConnection(driver4, url4, user4, password4, desc4, dbType4, protocolType4);
-        // Baza1 MySQL 5
+
+        // MySql Ares6 XA Localhost
+        String driver9 = "com.mysql.jdbc.Driver";
+        String url9 = "jdbc:mysql://localhost:3306/ares-system_6";
+        String user9 = "ares-system_6";
+        String password9 = "TEsttest1";
+        String desc9 = "MySql Ares6 XA Localhost";
+        String dbType9 = "MySql";
+        String protocolType9 = "XA";
+        this.addDbConnection(driver9, url9, user9, password9, desc9, dbType9, protocolType9);
+
+        // MySql Ares6
         String driver1 = "com.mysql.jdbc.Driver";
         String url1 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_6";
         String user1 = "ares-system_6";
@@ -146,7 +157,17 @@ public class TransactionLogic {
         String protocolType1 = ""; 
         this.addDbConnection(driver1, url1, user1, password1, desc1, dbType1, protocolType1);
 
-        // Baza2 MySQL 5
+        // MySql Ares6 Localhost
+        String driver10 = "com.mysql.jdbc.Driver";
+        String url10 = "jdbc:mysql://localhost:3306/ares-system_6";
+        String user10 = "ares-system_6";
+        String password10 = "TEsttest1";
+        String desc10 = "MySql Ares6 Localhost";
+        String dbType10 = "MySql";
+        String protocolType10 = "";
+        this.addDbConnection(driver10, url10, user10, password10, desc10, dbType10, protocolType10);
+
+        // MySql Ares7
         String driver2 = "com.mysql.jdbc.Driver";
         String url2 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_7";
         String user2 = "ares-system_7";
@@ -156,8 +177,18 @@ public class TransactionLogic {
         String protocolType2 = "";
         this.addDbConnection(driver2, url2, user2, password2, desc2, dbType2, protocolType2);
 
-        // Baza3 PostgreSQL 8.3
-        String driver3 = "org.postgresql.Driver";
+        // Baza MySql Ares7 Localhost
+        String driver8 = "com.mysql.jdbc.Driver";
+        String url8 = "jdbc:mysql://localhost:3306/ares-system_7";
+        String user8 = "ares-system_7";
+        String password8 = "TEsttest1";
+        String desc8 = "MySql Ares7 Localhost";
+        String dbType8 = "MySql";
+        String protocolType8 = "";
+        this.addDbConnection(driver8, url8, user8, password8, desc8, dbType8, protocolType8);
+
+        // PostgreSql Ares8
+        /*String driver3 = "org.postgresql.Driver";
         String url3 = "jdbc:postgresql://sql.ares-system.nazwa.pl:5433/ares-system_8";
         String user3 = "ares-system_8";
         String password3 = "TEsttest1";
@@ -165,9 +196,9 @@ public class TransactionLogic {
         String dbType3 = "PostgreSql";
         String protocolType3 = "";
         this.addDbConnection(driver3, url3, user3, password3,desc3,dbType3, protocolType3);
+        */
 
-
-		        // Baza3 PostgreSQL 8.3
+		// PostgreSql Ares8 XA
         String driver6 = "org.postgresql.Driver";
         String url6 = "jdbc:postgresql://sql.ares-system.nazwa.pl:5433/ares-system_8";
         String user6 = "ares-system_8";
@@ -177,7 +208,17 @@ public class TransactionLogic {
         String protocolType6 = "XA";
         this.addDbConnection(driver6, url6, user6, password6,desc6,dbType6, protocolType6);
 
-        // Baza2 MySQL 5
+        // PostgreSql Ares8 XA Localhost
+        String driver11 = "org.postgresql.Driver";
+        String url11 = "jdbc:postgresql://localhost:5432/ares-system_8";
+        String user11 = "ares-system_8";
+        String password11 = "TEsttest1";
+        String desc11 = "PostgreSql Ares8 XA Localhost";
+        String dbType11 = "PostgreSql";
+        String protocolType11 = "XA";
+        this.addDbConnection(driver11, url11, user11, password11,desc11,dbType11, protocolType11);
+
+        // MySql Ares7 XA
         String driver5 = "com.mysql.jdbc.Driver";
         String url5 = "jdbc:mysql://sql.ares-system.nazwa.pl:3305/ares-system_7";
         String user5 = "ares-system_7";
@@ -186,5 +227,15 @@ public class TransactionLogic {
         String dbType5 = "MySql";
         String protocolType5 = "XA";
         this.addDbConnection(driver5, url5, user5, password5, desc5, dbType5, protocolType5);
+
+        // MySql Ares7 XA Localhost
+        String driver7 = "com.mysql.jdbc.Driver";
+        String url7 = "jdbc:mysql://localhost:3306/ares-system_7";
+        String user7 = "ares-system_7";
+        String password7 = "TEsttest1";
+        String desc7 = "MySql Ares7 XA Localhost";
+        String dbType7 = "MySql";
+        String protocolType7 = "XA";
+        this.addDbConnection(driver7, url7, user7, password7, desc7, dbType7, protocolType7);
     }
 }

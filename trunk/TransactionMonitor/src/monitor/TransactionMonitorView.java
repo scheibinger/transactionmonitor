@@ -277,7 +277,12 @@ public class TransactionMonitorView extends FrameView {
         Connection connection = DriverManager.getConnection(dbcd.getUrl() , dbcd.getUser(), 
                                  dbcd.getPassword());
         Statement statement = connection.createStatement();
+        if(dbcd.dbType.equals("MySql")){
         statement.execute("SHOW tables;");
+        }
+        else{
+           statement.execute("select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE'");
+        }
         ResultSet rs = statement.getResultSet();
         while (rs.next()){
             dcbm.addElement(rs.getString(1));
@@ -572,9 +577,9 @@ public class TransactionMonitorView extends FrameView {
                             .addComponent(jLabel21))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(addOperationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 403, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(resetOperationButton))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel14)
@@ -601,7 +606,9 @@ public class TransactionMonitorView extends FrameView {
                                 .addComponent(addParemeterButton))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
                             .addComponent(operationTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
+                                .addGap(163, 163, 163))
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(operationDbComboBox, 0, 500, Short.MAX_VALUE)
@@ -658,8 +665,8 @@ public class TransactionMonitorView extends FrameView {
                             .addComponent(addCriteriaButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(addOperationButton)
-                            .addComponent(resetOperationButton)))
+                            .addComponent(resetOperationButton)
+                            .addComponent(addOperationButton)))
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -826,6 +833,7 @@ public class TransactionMonitorView extends FrameView {
         jScrollPane4.setName("jScrollPane4"); // NOI18N
 
         logTextArea.setColumns(20);
+        logTextArea.setFont(resourceMap.getFont("logTextArea.font")); // NOI18N
         logTextArea.setRows(5);
         logTextArea.setEditable(false);
         logTextArea.setName("logTextArea"); // NOI18N
@@ -1016,9 +1024,9 @@ public class TransactionMonitorView extends FrameView {
     private void startCompositeTransactionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startCompositeTransactionButtonActionPerformed
         // TODO add your handling code here:
         if(TransactionLogic.getInstance().startTransaction()){
-            System.out.print("jest ok!");
+            System.out.print("ok - commit");
         }else
-            System.out.print("gowno!");
+            System.out.print("ok - rolback");
 }//GEN-LAST:event_startCompositeTransactionButtonActionPerformed
 
 	private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
@@ -1032,6 +1040,7 @@ public class TransactionMonitorView extends FrameView {
         // TODO add your handling code here:
         this.resetOperations();
         this.resetAddedOperations();
+        logTextArea.setText("");
         TransactionLogic.getInstance().restartTransaction();
     }//GEN-LAST:event_newCompositeTransactionActionPerformed
 
