@@ -13,4 +13,5 @@ public interface TransactionParticipantIF {
     public boolean startTransaction(DBConnectionData dbcd, ComponentTransaction ct);
     public boolean commitTransaction();
     public boolean abortTransaction();
+    public boolean getStatus();
 }

@@ -79,5 +79,9 @@ public class ComponentTransactionAdapterPostgreSqlXA implements TransactionParti
         return false;
     }
 
+    public boolean getStatus() {
+            return this.dbcd.status;
+    }
+
 
 }

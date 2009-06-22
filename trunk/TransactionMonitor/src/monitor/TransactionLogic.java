@@ -61,6 +61,7 @@ public class TransactionLogic {
                 TransactionParticipantIF adapter = ComponentTransactionAdapterFactory.CreateAdapter(dbcd.getAdapterName());
                 isOK = adapter.startTransaction(dbcd,componentTransactionList.get(dbcd));
                 adapterList.add(adapter);
+                dbcd.status = isOK;
             }
 
             allOK &= isOK ;
@@ -87,7 +88,9 @@ public class TransactionLogic {
 
     public boolean abortTransaction(){
         for (TransactionParticipantIF adapter : adapterList) {
+            if(adapter.getStatus()){
             adapter.abortTransaction();
+            }
         }
         return true;
     }
