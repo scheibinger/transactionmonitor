@@ -13,6 +13,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import monitor.queryobject.QueryObject;
+import monitor.MyLogger.MyLogger;
 
 /**
  *
@@ -38,6 +39,7 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
                 }
             }
             stmt.executeUpdate("UNLOCK TABLES");
+            MyLogger.log("Commit podtransakcji "+dbcd.getDesc());
         } catch (SQLException ex) {
             this.success = false;
             Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,6 +59,7 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
                 }
             }
             stmt.executeUpdate("UNLOCK TABLES");
+            MyLogger.log("Rollback podtransakcji "+dbcd.getDesc());
         } catch (SQLException ex) {
             this.success = false;
             Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,9 +86,10 @@ public class ComponentTransactionAdapterMySql  implements TransactionParticipant
             for (Operation oper : ct) {
                 oper.execute(stmt);
             }
-
+            MyLogger.log("Podtransakcja "+dbcd.getDesc()+ dbcd.getDbType()+" powiodła się!");
         } catch (SQLException ex) {
             this.success = false;
+            MyLogger.log("Podtransakcja "+dbcd.getDesc()+" nie powiodła się!");
             Logger.getLogger(ComponentTransactionAdapterMySql.class.getName()).log(Level.SEVERE, null, ex);
         }
 

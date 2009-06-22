@@ -53,7 +53,7 @@ public class TransactionLogic {
      * @return boolean Czy globalna transakcja się udała.
      */
     public boolean startTransaction() {
-		MyLogger.log("Początek transakcji.");
+		MyLogger.log("Początek transakcji globalnej.");
         boolean allOK = true;
         for(DBConnectionData dbcd :dbConnectionList){
             boolean isOK = true;
@@ -64,19 +64,17 @@ public class TransactionLogic {
             }
 
             allOK &= isOK ;
-            if (!allOK)
-                break;
         }
         if(allOK) {
-			MyLogger.log("Transakcja zakończyła się sukcesem.");
+			MyLogger.log("Transakcja globalna zakończyła się sukcesem.");
 			commitTransaction();
 		}
         else {
-			MyLogger.log("Transakcja zakończyła się porażką.");
+			MyLogger.log("Transakcja globalna zakończyła się porażką.");
 			abortTransaction();
 		}
 
-		MyLogger.log("Koniec transakcji.");
+		MyLogger.log("Koniec transakcji globalnej.");
         return allOK;
     }
 

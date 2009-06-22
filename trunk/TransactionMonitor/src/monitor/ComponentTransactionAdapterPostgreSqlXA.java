@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import monitor.MyLogger.MyLogger;
 
 /**
  *
@@ -48,7 +49,9 @@ public class ComponentTransactionAdapterPostgreSqlXA implements TransactionParti
                 oper.executeXA(stmt);
             }
             stmt.execute("PREPARE TRANSACTION '" + this.key + "'");
+            MyLogger.log("Podtransakcja "+dbcd.getDesc()+" powiodła się!");
         } catch (SQLException ex) {
+            MyLogger.log("Podransakcja "+dbcd.getDesc()+" nie powiodła się!");
             this.success = false;
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -58,6 +61,7 @@ public class ComponentTransactionAdapterPostgreSqlXA implements TransactionParti
 
     public boolean commitTransaction() {
         try {
+            MyLogger.log("Commit podtransakcji "+dbcd.getDesc());
             return connection.createStatement().execute("COMMIT PREPARED '" + this.key + "'");
         } catch (SQLException ex) {
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,6 +71,7 @@ public class ComponentTransactionAdapterPostgreSqlXA implements TransactionParti
 
     public boolean abortTransaction() {
         try {
+            MyLogger.log("Rollback podtransakcji "+dbcd.getDesc());
             return connection.createStatement().execute("ROLLBACK PREPARED '" + this.key + "'");
         } catch (SQLException ex) {
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);

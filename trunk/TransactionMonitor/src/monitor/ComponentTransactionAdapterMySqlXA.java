@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import monitor.MyLogger.MyLogger;
 
 /**
  *
@@ -48,8 +49,10 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
             }
             stmt.execute("xa end \"" + this.key + '"');
             stmt.execute("xa prepare \"" + this.key + '"');
+            MyLogger.log("Podtransakcja "+dbcd.getDesc()+" powiodła się!");
         } catch (SQLException ex) {
             this.success = false;
+            MyLogger.log("Podtransakcja "+dbcd.getDesc()+" nie powiodła się!");
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
         }
         return this.success;
@@ -58,6 +61,7 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
 
     public boolean commitTransaction() {
         try {
+            MyLogger.log("Commit podtransakcji "+dbcd.getDesc());
             return connection.createStatement().execute("xa commit \"" + this.key + '"');
         } catch (SQLException ex) {
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,6 +71,7 @@ public class ComponentTransactionAdapterMySqlXA implements TransactionParticipan
 
     public boolean abortTransaction() {
         try {
+            MyLogger.log("Rollback podtransakcji "+dbcd.getDesc());
             return connection.createStatement().execute("xa rollback \"" + this.key + '"');
         } catch (SQLException ex) {
             Logger.getLogger(ComponentTransactionAdapterMySqlXA.class.getName()).log(Level.SEVERE, null, ex);
