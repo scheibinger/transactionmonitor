@@ -1,0 +1,36 @@
+<%@ MasterClass="Application.layouts.Main" Title="Mój uniwersytet" %>
+
+<com:TContent ID="Main" >
+    <div style="margin-left:4px;">
+    <%=TWhiteBox::getHead()%>
+    <div style="width:460px;text-align:center;">
+        <a class="aimg" href="<%=$this->Service->constructUrl('university.All')%>">
+            <img src="<%~ assets/home_moja_uczelnia.png%>"/>
+        </a>
+        <a class="aimg" href="<%=$this->Service->constructUrl('user.mate.Searchuser')%>">
+            <img src="<%~ assets/home_moi_kumple.png%>"/>
+        </a>
+    </div>
+    <%=TWhiteBox::getFooter()%>
+
+    <%=TWhiteBox::getHead()%>
+    <div style="width:460px;text-align:center;">
+        <a class="aimg" href="<%=$this->Service->constructUrl('portal.e-publikacje.All')%>"><img src="<%~ assets/home_e_publikacje.png%>"/>
+        </a>
+        <a class="aimg" href="<%=$this->Service->constructUrl('portal.e-notatki.All')%>"><img src="<%~ assets/home_e_notatki.png%>"/>
+        </a>
+        <a class="aimg" href="<%=$this->Service->constructUrl('portal.e-biblioteka.All')%>"><img src="<%~ assets/home_e_biblioteka.png%>"/>
+        </a>
+        <a class="aimg" href="<%=$this->Service->constructUrl('portal.m-lecture.All')%>"><img src="<%~ assets/home_e_grafik.png%>"/>
+        </a>
+    </div>
+    <%=TWhiteBox::getFooter()%>
+    
+    <%=TWhiteBox::getHead()%>
+        <div style="width:460px;">
+        <com:Application.portlets.CenterTags/>
+        </div>
+    <%=TWhiteBox::getFooter()%>
+    </div>
+
+</com:TContent>
