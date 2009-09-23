@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<application id="moj-uniwersytet" mode="Debug">
+
+    <paths>
+        <using namespace="Application.modules.*" />
+        <using namespace="Application.controls.*" />
+        <using namespace="Application.database.*" />
+        <using namespace="Application.data.*" />
+        <using namespace="System.Web.UI.ActiveControls.*" />
+        <using namespace="System.Util.*" />
+        <using namespace="System.Data.ActiveRecord.Scaffold.*" />
+    </paths>
+
+	<!-- configurations for modules -->
+    <modules>
+		
+        <module id="session" class="THttpSession" SessionName="SSID"
+         CookieMode="Allow" UseCustomStorage="false" AutoStart="true" GCProbability="1"
+         UseTransparentSessionID="true" TimeOut="3600" />
+		
+        <module class="System.Data.TDataSourceConfig" id="database1">
+            <database Charset="utf8" ConnectionString="mysql:host=sql.gofferson.nazwa.pl;dbname=gofferson_2" Username="gofferson_2" Password="MOtley256" />
+        </module>
+
+        <module id="mactiverecord" class="System.Data.ActiveRecord.TActiveRecordConfig"
+                ConnectionID="database1" EnableCache="false" />
+
+        <module id="msqlmap" class="System.Data.SqlMap.TSqlMapConfig"
+                EnableCache="false" ConfigFile="protected/sqlmap.xml" ConnectionID="database1">
+           
+        </module>
+
+		
+        <module id="request" class="THttpRequest" UrlManager="friendly-url" />
+		<!-- use TUrlMapping to map URL patterns to particular requests -->
+        <module id="friendly-url" class="System.Web.TUrlMapping">
+            <url ServiceParameter="user.calendar.All" pattern="user/calendar/All" />
+            <url ServiceParameter="user.mcard.receiveStatus" pattern="user/mcard/Online" />
+            <url ServiceParameter="user.mcard.Show" pattern="user/mcard/Show/{id}/?" parameters.id="\d+"/>
+            <url ServiceParameter="user.mcard.Ok" pattern="user/mcard/Ok/{order_id}" parameters.order_id="\d+"/>
+             <url ServiceParameter="user.mcard.Error" pattern="user/mcard/Error/{error_id}/{order_id}" parameters.order_id="\d+" parameters.error_id="\d+"/>
+            <url ServiceParameter="user.mcard.Error" pattern="user/mcard/Error"/>
+            <url ServiceParameter="Posts.ListPost" pattern="archive/{time}/?" parameters.time="\d{6}" />
+            <url ServiceParameter="Posts.ListPost" pattern="category/{cat}/?" parameters.cat="\d+" />
+        </module>
+
+
+		
+        <module id="image" class="Application.modules.Image" />
+        <module id="MsgList" class="Application.modules.MsgList" />
+        <module id="PDOconnect" class="Application.PDOconnect" />
+        <module id="mailer" class="Application.modules.Mailer" Host="marketstrike.pl" Username="manager" Password="MOtley256" From="manager@marketstrike.pl" FromName="Market Strike" SMTPAuth="true" SingleTo="true" />
+
+        <module class="System.Util.TParameterModule" ParameterFile="Application.data.settings"></module>
+		
+        <module id="users" class="System.Security.TDbUserManager" UserClass="Application.User" />
+		
+        <module id="auth" class="System.Security.TAuthManager" UserManager="users" LoginPage="Home" />
+		
+
+    </modules>
+
+	<!-- configuration for available services -->
+    <services>
+        <service id="page" class="TPageService" BasePath="Application.pages" DefaultPage="Home">
+            <pages MasterClass="Application.layouts.Main" Theme="main" />
+        </service>
+    </services>
+
+
+</application>
